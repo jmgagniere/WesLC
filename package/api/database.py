@@ -13,6 +13,63 @@ class Database:
             if self.db.open():
                 Database.is_instantiated = True
                 print("database has been instantiated")
+                # Creation des tables si elles n'existent pas
+                query = QSqlQuery()
+                query.prepare("""   CREATE TABLE IF NOT EXISTS 'ftp_param' (
+                                "host" TEXT NOT NULL,
+                                "login" TEXT NOT NULL,
+                                "passwd" TEXT NOT NULL)
+                             """)
+                query.exec()
+
+                query.prepare("""   CREATE TABLE IF NOT EXISTS 'plot_param' (
+	                            "id"	TEXT,
+	                            "name"	TEXT,
+	                            "color"	TEXT,
+	                            "state"	INTEGER,
+	                            "width"	INTEGER)
+                             """)
+                query.exec()
+
+                query.prepare("""
+                                INSERT INTO 'plot_param' VALUES ('1w1','T° Cave','#0000ff',2,3),
+                                ('1w2','T° RdC','#fc0107',2,3),
+                                ('1w3','T° Ext','#408002',2,3),
+                                ('pulse1','Gialix','#fd8008',2,2),
+                                ('pince1','VMC','#1eb612',2,1),
+                                ('pince2','ECS','#996633',2,2),
+                                ('ph1','ph1','#9e533c',0,1),
+                                ('ph2','ph2','#d94f36',0,1),
+                                ('ph3','ph3','#ffaa00',0,1),
+                                ('pa','pa','#00aaff',0,4),
+                                ('base','T_Infos','#000000',0,1)
+                               """)
+                query.exec()
+
+                query.prepare("""   CREATE TABLE IF NOT EXISTS 'weslc_new' (
+	                            "Id"	INTEGER,
+	                            "Time"	TEXT,
+	                            "time_utc"	TEXT UNIQUE,
+	                            "w1"	REAL,
+	                            "w2"	REAL,
+	                            "w3"	REAL,
+	                            "pulse_1"	REAL,
+	                            "pince_1"	REAL,
+	                            "pince_2"	REAL,
+	                            "base"	REAL,
+	                            "ph1"	REAL,
+	                            "ph2"	REAL,
+	                            "ph3"	REAL,
+	                            "pa"	REAL)
+                              """)
+                query.exec()
+
+                query.prepare("""   INSERT INTO "weslc_new" 
+                                    VALUES (1,'2019-01-01 00:00','2019-01-01 00:00',0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0) 
+                            """)
+                query.exec()
+
+                print("Creation tables")
             else:
                 print("Echec ouverture")
 
