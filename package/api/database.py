@@ -86,6 +86,19 @@ class Database:
                             """)
                 query.exec()
 
+                query.prepare("""   CREATE TABLE IF NOT EXISTS 'list_base' (
+                                "path_base"     TEXT,
+                                "name_base"     TEXT,
+                                "cur_base"      TEXT)
+                                """)
+                query.exec()
+
+                query.prepare(""" INSERT INTO "list_base"
+                                VALUES ('/Users/jmg/WesLC/database', 'baseWes.db', 'baseWes.db')
+                                """)
+                query.exec()
+
+
         else:
             print("database has already been created")
 
