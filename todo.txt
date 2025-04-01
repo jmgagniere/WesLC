@@ -1,4 +1,2 @@
 Problèmes:
-1 - Si base inexistante une base vide sans table est crée, mais l'application plante
-2 - Si base existe mais avec aucun enregistrement dans la table weslc_new, l'application plante aussi car elle n'arrive pas à trouver le dernier enregistrement
-    précédant. Résolu en ajoutant un 1er record dans la table
+1 - Gestion de l'endroit de stockage de la base et du répertoire temporaire pour ftp
