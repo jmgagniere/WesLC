@@ -1,37 +1,54 @@
 from PySide6 import QtWidgets
 from PySide6.QtSql import QSqlQuery, QSqlDatabase
 
+import os
+
 class Database:
     is_instantiated = False
 
     def __init__(self):
         if not Database.is_instantiated:
-            # création de la connexion
-            self.db = QSqlDatabase.addDatabase("QSQLITE")
-            self.db.setDatabaseName("database/baseWes.db")
+            # Verification de l'exixtence de la base
+            # Get the current working directory
+            ##print("The current working directory is:", current_directory)
+            file_path = "database/baseWes.db"
+            if os.path.exists(file_path):
+                print("The file exists.")
+                # création de la connexion
+                self.db = QSqlDatabase.addDatabase("QSQLITE")
+                self.db.setDatabaseName("database/baseWes.db")
 
-            self.db.open()
-            Database.is_instantiated = True
-            print("database has been instantiated")
-            # Creation des tables si elles n'existent pas
-            query = QSqlQuery()
-            query.prepare("""   CREATE TABLE IF NOT EXISTS 'ftp_param' (
+                self.db.open()
+                Database.is_instantiated = True
+                print("database has been instantiated")
+            else:
+                print("The file does not exist.")
+                # création de la connexion
+                self.db = QSqlDatabase.addDatabase("QSQLITE")
+                self.db.setDatabaseName("database/baseWes.db")
+
+                self.db.open()
+                Database.is_instantiated = True
+                print("database has been instantiated")
+                # Creation des tables si elles n'existent pas
+                query = QSqlQuery()
+                query.prepare("""   CREATE TABLE IF NOT EXISTS 'ftp_param' (
                                 "host" TEXT NOT NULL,
                                 "login" TEXT NOT NULL,
                                 "passwd" TEXT NOT NULL)
                              """)
-            query.exec()
+                query.exec()
 
-            query.prepare("""   CREATE TABLE IF NOT EXISTS 'plot_param' (
+                query.prepare("""   CREATE TABLE IF NOT EXISTS 'plot_param' (
 	                            "id"	TEXT,
 	                            "name"	TEXT,
 	                            "color"	TEXT,
 	                            "state"	INTEGER,
 	                            "width"	INTEGER)
                              """)
-            query.exec()
+                query.exec()
 
-            query.prepare("""
+                query.prepare("""
                                 INSERT INTO 'plot_param' VALUES ('1w1','T° Cave','#0000ff',2,3),
                                 ('1w2','T° RdC','#fc0107',2,3),
                                 ('1w3','T° Ext','#408002',2,3),
@@ -44,9 +61,9 @@ class Database:
                                 ('pa','pa','#00aaff',0,4),
                                 ('base','T_Infos','#000000',0,1)
                                """)
-            query.exec()
+                query.exec()
 
-            query.prepare("""   CREATE TABLE IF NOT EXISTS 'weslc_new' (
+                query.prepare("""   CREATE TABLE IF NOT EXISTS 'weslc_new' (
 	                            "Id"	INTEGER,
 	                            "Time"	TEXT,
 	                            "time_utc"	TEXT UNIQUE,
@@ -62,13 +79,12 @@ class Database:
 	                            "ph3"	REAL,
 	                            "pa"	REAL)
                               """)
-            query.exec()
+                query.exec()
 
-            query.prepare("""   INSERT INTO "weslc_new" 
+                query.prepare("""   INSERT INTO "weslc_new" 
                                     VALUES (1,'2019-01-01 00:00','2019-01-01 00:00',0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0) 
                             """)
-            query.exec()
-
+                query.exec()
 
         else:
             print("database has already been created")

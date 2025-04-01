@@ -4,6 +4,7 @@ from PySide6.QtCore import QDateTime
 from PySide6.QtWidgets import QMessageBox
 
 from package.api.database import Database
+from infosBaseDialog import InfosBaseDialog
 
 class CsvTraitement:
     def __init__(self, dateImport):
@@ -163,6 +164,14 @@ class CsvTraitement:
             )
 
         print("Fin ajout base")
+
+        # Vidage def ftp_temp
+        list = os.listdir('./ftp_temp')
+
+        for f in list:
+            os.remove(f"./ftp_temp/{f}")
+
+
 
     def convert_index_to_time_string(self,index):
         h, m = divmod(index, 60)

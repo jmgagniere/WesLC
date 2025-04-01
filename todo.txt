@@ -1,2 +1,3 @@
 Problèmes:
 1 - Gestion de l'endroit de stockage de la base et du répertoire temporaire pour ftp
+2 - Supression automatique des fichiers .csv après import en base réussi
