@@ -1,116 +1,90 @@
 from functools import partial
-
 from PySide6 import QtWidgets, QtCore
 
+from new_ui.UI_configDialog import Ui_Dialog
 from package.api.database import Database
 
-class BlocWidget(QtWidgets.QWidget):
-    def __init__(self, id="Id", cb_check=False, cb_label="name", color="#303030", width=0):
-        super().__init__()
-
-        self.cb_check = cb_check
-        self.cb_label = cb_label
-        self.id = id
-        self.color = color
-        self.width = width
-
-        self.setup_ui()
-
-    def setup_ui(self):
-        self.create_widget()
-        self.modify_widget()
-        self.create_layout()
-        self.add_widgets_to_layout()
-
-
-    def create_widget(self):
-        self.cb = QtWidgets.QCheckBox(self.cb_label)
-        self.le = QtWidgets.QLineEdit(str(self.id))
-        self.btn = QtWidgets.QPushButton()
-        self.spin = QtWidgets.QSpinBox()
-
-    def modify_widget(self):
-        self.cb.setCheckState(QtCore.Qt.CheckState(self.cb_check))
-        #self.le.setReadOnly(True)
-        self.btn.setFixedHeight(16)
-        self.spin.setRange(1, 5)
-
-    def create_layout(self):
-        self.layout = QtWidgets.QHBoxLayout()
-        self.layout.setSpacing(0)
-        self.setLayout(self.layout)
-
-    def add_widgets_to_layout(self):
-        self.layout.addWidget(self.cb)
-        self.layout.addWidget(self.le)
-        self.layout.addWidget(self.btn)
-        self.layout.addWidget(self.spin)
-
-
-class ConfigDialog(QtWidgets.QDialog):
+class ConfigDialog(QtWidgets.QDialog, Ui_Dialog):
     def __init__(self):
         super(ConfigDialog, self).__init__()
+        self.setupUi(self)
         self.setWindowTitle("Configuration")
+
         self.db = Database()
+        self.init_widget()
 
-        self.create_layout()
-        self.create_widget()
-        self.modify_widget()
-        self.add_widgets_to_layout()
-        self.setup_connections()
-
-    def create_widget(self):
-        # - Récuperation des parametres en base
-        bloc_param = self.db.get_plot_param()
-        # query_string = "SELECT id, name, color, state, width FROM plot_param"
-        bloc_position = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (0, 2), (1, 2), (2, 2), (3, 2), (0, 1)]
-
-        self.blocs_data_dict = {}
-        for i, blo in enumerate(bloc_param):
-            bloc = BlocWidget(id=blo[0], cb_label=blo[0], color=blo[2], cb_check=blo[3],  width=blo[4])
-            bloc.le.setText(blo[1])
-            bloc.btn.setStyleSheet('QPushButton {background-color:' + blo[2] + '; border:  none}')
-            bloc.spin.setValue(blo[4])
-            # Add to Layout
-            self.grid_layout.addWidget(bloc, bloc_position[i][0], bloc_position[i][1], 1, 1)
-            # Signal
-            bloc.cb.stateChanged.connect(partial(self.module_changed, bloc.id))
-            bloc.btn.clicked.connect(partial(self.choix_couleur, bloc.id))
-
-            self.blocs_data_dict[bloc.id] = bloc
-
-        self.gb_param = QtWidgets.QGroupBox("Paramètres Serveur Wes")
-
-        self.btn_abandon = QtWidgets.QPushButton("Abandonner")
-        self.btn_save = QtWidgets.QPushButton("Enregistrer")
-
-    def modify_widget(self):
-
-        self.blocs_data_dict["base"].cb.setText("T_Infos")
-        self.blocs_data_dict["base"].btn.setVisible(False)
-        self.blocs_data_dict["base"].spin.setVisible(False)
-
-        for key in ["ph1", "ph2", "ph3", "pa", "base"]:
-            self.blocs_data_dict[key].le.setVisible(False)
-
-
-
-    def create_layout(self):
-        self.grid_layout = QtWidgets.QGridLayout()
-        self.group_layout =QtWidgets.QGridLayout()
-
-
-    def add_widgets_to_layout(self):
-        self.gb_param.setLayout(self.grid_layout)
-        self.group_layout.addWidget(self.gb_param, 0, 0, 1, 3)
-        self.group_layout.addWidget(self.btn_abandon, 1, 1, 1, 1)
-        self.group_layout.addWidget(self.btn_save, 1, 2, 1, 1)
-        self.setLayout(self.group_layout)
-        pass
-
-    def setup_connections(self):
+        # Signaux
         self.btn_abandon.clicked.connect(self.btn_abandon_clicked)
         self.btn_save.clicked.connect(self.btn_save_clicked)
+
+    def init_widget(self):
+        # listes des widgets de l'interface graphique par catégories
+        self.list_cb_widget = [self.cb_1w1, self.cb_1w2, self.cb_1w3, self.cb_pulse1, self.cb_pince1, self.cb_pince2,
+                        self.cb_ph1, self.cb_ph2, self.cb_ph3, self.cb_pa, self.cb_base]
+
+        self.list_le_widget = [self.le_1w1, self.le_1w2, self.le_1w3, self.le_pulse1, self.le_pince1, self.le_pince2]
+
+        self.list_color_widget = [self.b_c1w1, self.b_c1w2, self.b_c1w3, self.b_cpulse1, self.b_cpince1, self.b_cpince2,
+                           self.b_cph1, self.b_cph2, self.b_cph3, self.b_cpa]
+
+        self.list_width_widget = [self.spBox_1w1, self.spBox_1w2, self.spBox_1w3,
+                           self.spBox_pulse1, self.spBox_pince1, self.spBox_pince2,
+                           self.spBox_ph1, self.spBox_ph2, self.spBox_ph3, self.spBox_pa]
+
+        # - Récuperation des parametres en base
+        self.bloc_param = self.db.get_plot_param()
+        #print("bloc_param", self.bloc_param)
+        # query_string = "SELECT id, name, color, state, width FROM plot_param"
+        # self.bloc_param est une liste de liste, chaque sous liste contient les 5 éléments issus de query_string
+        # on va récuperer une liste  key_list qui servira de clés pour des dictionnaires
+        # on récupere une liste qui servira de valeur pour les lineEdit
+        # on récupere une liste qui servira de valeur pour les couleurs
+        # on récuoere une liste qui servira de valeur pour l'etat des checkBox (O pas coché, 2 coché)
+        # on récupère une liste qui servira de valeur pour le nombre de chiffre à afficher
+        self.key_list = []
+        le_val = []
+        color_val = []
+        cbox_val = []
+        spbox_val = []
+        for i, blo in enumerate(self.bloc_param):
+            self.key_list.append(blo[0])
+            le_val.append(blo[1])
+            color_val.append(blo[2])
+            cbox_val.append(blo[3])
+            spbox_val.append(blo[4])
+
+        """print("key_list", self.key_list)
+        print("le_val", le_val)
+        print("color_val", color_val)
+        print("cbox_val", cbox_val)
+        print("spbox_val", spbox_val)"""
+
+        # creation des dictionnaires
+        self.dict_cbox_val = dict(zip(self.key_list, cbox_val))
+        self.dict_le_val = dict(zip(self.key_list, le_val))
+        self.dict_color_val = dict(zip(self.key_list, color_val))
+        self.dict_spbox_val = dict(zip(self.key_list, spbox_val))
+
+        self.dict_cbox_widget = dict(zip(self.key_list, self.list_cb_widget))
+        self.dict_le_widget = dict(zip(self.key_list, self.list_le_widget))
+        self.dict_color_widget = dict(zip(self.key_list, self.list_color_widget))
+        self.dict_spbox_widget = dict(zip(self.key_list, self.list_width_widget))
+
+        # Mise à jour affichage des checkBox
+        for key, val in self.dict_cbox_val.items():
+            self.dict_cbox_widget[key].setCheckState(QtCore.Qt.CheckState(val))
+        # Mise à jour affichage des lineEdit
+        for key in self.dict_le_widget:
+            self.dict_le_widget[key].setText(self.dict_le_val[key])
+        # Mise à jour affichage des color
+        for key in self.dict_color_widget:
+            val = self.dict_color_val[key]
+            self.dict_color_widget[key].setStyleSheet('QPushButton {background-color:' + val + '; border:  none}')
+            # Signal
+            self.dict_color_widget[key].clicked.connect(partial(self.choix_couleur, key))
+        # Mise à jour affichage des spinBox
+        for key in self.dict_spbox_widget:
+            self.dict_spbox_widget[key].setValue(self.dict_spbox_val[key])
 
     def btn_abandon_clicked(self):
         print("btn_abandon clicked")
@@ -119,42 +93,43 @@ class ConfigDialog(QtWidgets.QDialog):
     def btn_save_clicked(self):
         print("btn_save clicked")
         #cb_Check = []
-        for key in self.blocs_data_dict:
-            # CheckBoxes
-            if str(self.blocs_data_dict[key].cb.checkState()) == 'CheckState.Checked':
-                print(key," is checked" )
-                self.blocs_data_dict[key].cb_check = 2
-                #cb_Check.append(2)
+        # Mise à jour de bloc_param
+        #   checkBoxs
+        for i, cb in enumerate(self.list_cb_widget):
+            if str(self.list_cb_widget[i].checkState()) == 'CheckState.Checked':
+                self.bloc_param[i][3] = 2
             else:
-                print(key, " is unchecked")
-                self.blocs_data_dict[key].cb_check = 0
-                #cb_Check.append(0)
+                self.bloc_param[i][3] = 0
+        #   LineEdits
+        for i, le in enumerate(self.list_le_widget):
+            self.bloc_param[i][1] = self.list_le_widget[i].text()
+        #   bouton colors
+        for i, col in enumerate(self.list_color_widget):
+            self.bloc_param[i][2] = self.list_color_widget[i].palette().button().color().name()
+        #   spinBoxs
+        for i, val in enumerate(self.list_width_widget):
+            #print("i=", i, "val=",val)
+            self.bloc_param[i][4] = val.value()
 
-            # LineEdits
-            self.blocs_data_dict[key].cb_label = self.blocs_data_dict[key].le.text()
+        #print("bloc_param_s", self.bloc_param)
+        blocs_data = dict(zip(self.key_list, self.bloc_param))
+        #print("blocs_data", blocs_data)
 
-            # PushButton Color => traiter dans choix_couleur
-
-            # SpinBoxes
-            self.blocs_data_dict[key].width = self.blocs_data_dict[key].spin.value()
-
-        self.db.save_plot_param(**self.blocs_data_dict)
+        self.db.save_plot_param(**blocs_data)
         self.done(QtWidgets.QDialog.DialogCode.Accepted)
 
-    def choix_couleur(self, id):
-        print('Choix couleur pour ', id)
+    def choix_couleur(self, key):
+        print('Choix couleur pour ', key)
         couleur = QtWidgets.QColorDialog.getColor().name()
         print('couleur =', couleur)
         # Change la couleur du bouton
-        self.blocs_data_dict[id].btn.setStyleSheet('QPushButton {background-color:' + couleur + '; border:  none}')
-        self.blocs_data_dict[id].color = couleur
+        #print("dict_color.get(id)", self.dict_color_widget[key])
+        self.dict_color_widget[key].setStyleSheet('QPushButton {background-color:' + couleur + '; border:  none}')
 
 
-
-
-    def module_changed(self, id, state):
+    """def module_changed(self, id, state):
         print("Widget state changed", id, state)
         self.blocs_data_dict[id].cb_check = state
 
     def le_text_changed(self, id, text):
-        print("text changed", id, text)
+        print("text changed", id, text)"""

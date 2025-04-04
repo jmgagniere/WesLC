@@ -183,19 +183,27 @@ class Database:
         return list
 
     def save_plot_param(self, **b_dict):
+        print("save_plot_param")
         query = QSqlQuery()
         query.exec("DELETE FROM plot_param")
 
         for key in b_dict:
+            print("key:",key, b_dict[key][1], b_dict[key][2], b_dict[key][3], b_dict[key][4])
             #print("key:",key, " cb_label=", b_dict[key].cb_label, " color=",b_dict[key].color, "show=", b_dict[key].cb_check, " width=", b_dict[key].width)
             query.prepare("""INSERT INTO plot_param (id, name, color, state, width)
                             VALUES (:id1, :d1_name, :d1_color, :d1_show, :d1_width)""")
 
             query.bindValue(":id1", key)
+            query.bindValue(":d1_name", b_dict[key][1])
+            query.bindValue(":d1_color", b_dict[key][2])
+            query.bindValue(":d1_show", b_dict[key][3])
+            query.bindValue(":d1_width", b_dict[key][4])
+
+            """query.bindValue(":id1", key)
             query.bindValue(":d1_name", b_dict[key].cb_label)
             query.bindValue(":d1_color", b_dict[key].color)
             query.bindValue(":d1_show", b_dict[key].cb_check)
-            query.bindValue(":d1_width", b_dict[key].width)
+            query.bindValue(":d1_width", b_dict[key].width)"""
 
             flag = query.exec()
             #self.test_result(flag)

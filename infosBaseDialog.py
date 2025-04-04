@@ -2,55 +2,24 @@ import os
 
 from PySide6 import QtWidgets, QtCore
 
+from new_ui.UI_InfosBaseDialog import Ui_Dialog
 from package.api.database import Database
 
-class InfosBaseDialog(QtWidgets.QDialog):
+class InfosBaseDialog(QtWidgets.QDialog, Ui_Dialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Infos Base")
 
         self.db = Database()
 
-        self.setup_ui()
+        self.setupUi(self)
+
         self.btn_infos_clicked()
 
-    def setup_ui(self):
-        self.create_layout()
-        self.create_widgets()
-        self.modify_widgets()
-        self.add_widgets_to_layout()
-        self.setup_connections()
-
-    def create_layout(self):
-        self.grid_layout = QtWidgets.QGridLayout()
-        pass
-
-    def create_widgets(self):
-        self.btn_infos = QtWidgets.QPushButton("Infos Base")
-        self.btn_optimise = QtWidgets.QPushButton("Optimise Base")
-        self.btn_OK = QtWidgets.QPushButton("OK")
-        self.btn_purge_ftp = QtWidgets.QPushButton("Purge FTP")
-        self.te_infos = QtWidgets.QTextEdit()
-
-
-    def modify_widgets(self):
-        self.te_infos.setReadOnly(True)
-
-    def add_widgets_to_layout(self):
-        self.grid_layout.addWidget(self.te_infos, 0, 0, 5, 2)
-        self.grid_layout.addWidget(self.btn_infos, 0, 4, 1, 1)
-        self.grid_layout.addWidget(self.btn_optimise, 1, 4, 1, 1)
-        self.grid_layout.addWidget(self.btn_purge_ftp, 3, 4, 1, 1)
-        self.grid_layout.addWidget(self.btn_OK, 5, 4, 1, 1 )
-
-        self.setLayout(self.grid_layout)
-
-    def setup_connections(self):
         self.btn_infos.clicked.connect(self.btn_infos_clicked)
         self.btn_optimise.clicked.connect(self.btn_optimise_clicked)
         self.btn_OK.clicked.connect(self.btn_OK_clicked)
         self.btn_purge_ftp.clicked.connect(self.btn_purge_ftp_clicked)
-
 
     def btn_infos_clicked(self):
         print("btn_infos_base clicked")
