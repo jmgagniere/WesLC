@@ -31,7 +31,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -135,7 +135,7 @@
          </widget>
         </item>
         <item row="1" column="1" colspan="2">
-         <widget class="QDateEdit" name="dt_splitReccord">
+         <widget class="QDateEdit" name="dt_splitRecord">
           <property name="minimumSize">
            <size>
             <width>106</width>
@@ -257,7 +257,7 @@
          <x>-2</x>
          <y>32</y>
          <width>232</width>
-         <height>373</height>
+         <height>384</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -285,6 +285,12 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>93</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="text">
            <string>Optimise</string>
           </property>
@@ -293,7 +299,7 @@
         <item>
          <widget class="QTextEdit" name="te_infosBase">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -301,7 +307,7 @@
           <property name="minimumSize">
            <size>
             <width>220</width>
-            <height>250</height>
+            <height>226</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -313,20 +319,23 @@
          </widget>
         </item>
         <item>
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Orientation::Vertical</enum>
+         <widget class="QPushButton" name="btn_base_OK">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Policy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
+          <property name="minimumSize">
            <size>
-            <width>20</width>
-            <height>21</height>
+            <width>93</width>
+            <height>32</height>
            </size>
           </property>
-         </spacer>
+          <property name="text">
+           <string>OK</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

@@ -20,10 +20,11 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         print("current base=", self.current_base_name)
         self.gb_baseCourante.setTitle(self.current_base_name)
         self.btn_infosBase_clicked()
+
         date = self.db.get_lastRecordDate()[0:10]
         self.deb_last_record_date = QtCore.QDate.fromString(date, ("yyyy-MM-dd"))
         self.dt_lastRecord.setDate(self.deb_last_record_date)
-        self.dt_splitReccord.setDate(self.deb_last_record_date)
+        self.dt_splitRecord.setDate(self.deb_last_record_date)
         date = self.db.get_firstRecordDate()[0:10]
         self.firstRecord_date = QtCore.QDate.fromString(date, ("yyyy-MM-dd"))
         self.dt_firstRecord.setDate(self.firstRecord_date)
@@ -33,6 +34,7 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
     def setup_connections(self):
         self.btn_infosBase.clicked.connect(self.btn_infosBase_clicked)
         self.btn_optimiseBase.clicked.connect(self.btn_optimiseBase_clicked)
+        self.btn_base_OK.clicked.connect(self.btn_base_OK_clicked)
 
     def btn_infosBase_clicked(self):
         print("infosBase btn clicked")
@@ -51,3 +53,7 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.db.base_optimise()
         taille = os.path.getsize("database/baseWes.db")
         self.te_infosBase.append('Nouvelle Taille du fichier = ' + str(taille) + ' octets')
+
+    def btn_base_OK_clicked(self):
+        print("btn_base_OK_clicked")
+        self.done(QtWidgets.QDialog.DialogCode.Accepted)
