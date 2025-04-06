@@ -16,9 +16,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QDateEdit, QDialog,
-    QGridLayout, QGroupBox, QLabel, QLayout,
-    QListWidget, QListWidgetItem, QPushButton, QSizePolicy,
-    QSpacerItem, QTextEdit, QVBoxLayout, QWidget)
+    QGridLayout, QGroupBox, QHeaderView, QLabel,
+    QLayout, QPushButton, QSizePolicy, QSpacerItem,
+    QTableView, QTextEdit, QVBoxLayout, QWidget)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -116,7 +116,7 @@ class Ui_Dialog(object):
         self.gb_autreBase.setFlat(False)
         self.layoutWidget_3 = QWidget(self.gb_autreBase)
         self.layoutWidget_3.setObjectName(u"layoutWidget_3")
-        self.layoutWidget_3.setGeometry(QRect(24, 16, 258, 209))
+        self.layoutWidget_3.setGeometry(QRect(24, 16, 313, 225))
         self.verticalLayout_2 = QVBoxLayout(self.layoutWidget_3)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -127,14 +127,10 @@ class Ui_Dialog(object):
 
         self.verticalLayout_2.addWidget(self.btn_loadBase)
 
-        self.lw_listeBase = QListWidget(self.layoutWidget_3)
-        QListWidgetItem(self.lw_listeBase)
-        self.lw_listeBase.setObjectName(u"lw_listeBase")
-        sizePolicy.setHeightForWidth(self.lw_listeBase.sizePolicy().hasHeightForWidth())
-        self.lw_listeBase.setSizePolicy(sizePolicy)
-        self.lw_listeBase.setMaximumSize(QSize(16777215, 150))
+        self.tv_listeBase = QTableView(self.layoutWidget_3)
+        self.tv_listeBase.setObjectName(u"tv_listeBase")
 
-        self.verticalLayout_2.addWidget(self.lw_listeBase)
+        self.verticalLayout_2.addWidget(self.tv_listeBase)
 
 
         self.gridLayout.addWidget(self.gb_autreBase, 3, 0, 1, 1)
@@ -199,13 +195,6 @@ class Ui_Dialog(object):
         self.btn_splitBase.setText(QCoreApplication.translate("Dialog", u"Split Base", None))
         self.gb_autreBase.setTitle(QCoreApplication.translate("Dialog", u"Autre Base", None))
         self.btn_loadBase.setText(QCoreApplication.translate("Dialog", u"Charge autre base", None))
-
-        __sortingEnabled = self.lw_listeBase.isSortingEnabled()
-        self.lw_listeBase.setSortingEnabled(False)
-        ___qlistwidgetitem = self.lw_listeBase.item(0)
-        ___qlistwidgetitem.setText(QCoreApplication.translate("Dialog", u"listwidget", None));
-        self.lw_listeBase.setSortingEnabled(__sortingEnabled)
-
         self.gb_baseCourante.setTitle(QCoreApplication.translate("Dialog", u"Base Courante", None))
         self.btn_infosBase.setText(QCoreApplication.translate("Dialog", u"Infos Base", None))
         self.btn_optimiseBase.setText(QCoreApplication.translate("Dialog", u"Optimise", None))

@@ -1,5 +1,6 @@
-import os
-from PySide6 import QtWidgets, QtCore
+import os, glob, time
+import datetime as dt
+from PySide6 import QtWidgets, QtCore, QtGui
 
 from new_ui.UI_baseDialog import Ui_Dialog
 from package.api.database import Database
@@ -20,6 +21,11 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         print("current base=", self.current_base_name)
         self.gb_baseCourante.setTitle(self.current_base_name)
         self.btn_infosBase_clicked()
+        self.get_list_of_existing_base()
+        #self.lv_listeBase.clear()
+
+        #tableview
+
 
         date = self.db.get_lastRecordDate()[0:10]
         self.deb_last_record_date = QtCore.QDate.fromString(date, ("yyyy-MM-dd"))
@@ -57,3 +63,16 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
     def btn_base_OK_clicked(self):
         print("btn_base_OK_clicked")
         self.done(QtWidgets.QDialog.DialogCode.Accepted)
+
+    def get_list_of_existing_base(self):
+        print("get_list_of_existing_base")
+        path = "database/*.db"
+
+        list_files = []
+        for file in glob.glob(path,recursive=True):
+            file_time = dt.datetime.fromtimestamp(os.path.getmtime(file))
+            #print("file_time=", file_time.strftime("%d/%m/%Y, %H:%M"))
+            list_files.append((file, file_time.strftime("%d/%m/%Y, %H:%M"),  os.path.getsize(file)))
+            #item = QtGui.QStandardItem(file)
+            #model.appendRow(item)
+        print("list_files", list_files)

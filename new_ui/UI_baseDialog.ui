@@ -200,8 +200,8 @@
         <rect>
          <x>24</x>
          <y>16</y>
-         <width>258</width>
-         <height>209</height>
+         <width>313</width>
+         <height>225</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -219,25 +219,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="lw_listeBase">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>150</height>
-           </size>
-          </property>
-          <item>
-           <property name="text">
-            <string>listwidget</string>
-           </property>
-          </item>
-         </widget>
+         <widget class="QTableView" name="tv_listeBase"/>
         </item>
        </layout>
       </widget>
