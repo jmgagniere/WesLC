@@ -12,6 +12,7 @@ from package.api.PlotData import PlotData
 from configDialog import ConfigDialog
 from ftpDialog import FtpDialog
 from infosBaseDialog import InfosBaseDialog
+from baseDialog import BaseDialog
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -76,6 +77,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.actionQuit.triggered.connect(self.close)
         self.actionConfig_Legende.triggered.connect(self.btn_config_clicked)
+        self.actionactionBase.triggered.connect(self.actionBase_triggered)
 
     def init_plot(self):
         print("init_plot")
@@ -339,6 +341,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if result == QtWidgets.QDialog.DialogCode.Accepted:
             print("OKOK")
             self.flag_fin_ajout_data_in_base = True
+
+    def actionBase_triggered(self):
+        print("actionBase triggered")
+        baseDialog = BaseDialog()
+        result = baseDialog.exec()
+        if result == QtWidgets.QDialog.DialogCode.Accepted:
+            print("okok")
+
 
     def cb_base_clicked(self):
         print("cb_base_StateChanged", self.cb_base.isChecked())

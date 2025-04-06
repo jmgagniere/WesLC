@@ -2,3 +2,4 @@ ftp_temp/
 database/
 __pycache__/
 package/__pycache__/
+.idea/

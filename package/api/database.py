@@ -2,11 +2,18 @@ from PySide6 import QtWidgets
 from PySide6.QtSql import QSqlQuery, QSqlDatabase
 
 import os
+from datetime import datetime
 
 class Database:
     is_instantiated = False
 
     def __init__(self):
+        """ Si il n'existe aucune base on crée une nouvelle base avec les tables suivantes:
+            - ftp_param avec les champs host, login, passwd prérempli
+            - plot_param avec les champs id, name, color, state, width préremplis
+            - weslc_new avec un premier record bidon
+            - list_base avec les champs path_base, name_base, cur_base préremplie avec la base par défaut"""
+
         if not Database.is_instantiated:
             # Verification de l'exixtence de la base
             # Get the current working directory
@@ -79,11 +86,6 @@ class Database:
 	                            "ph3"	REAL,
 	                            "pa"	REAL)
                               """)
-                query.exec()
-
-                query.prepare("""   INSERT INTO "weslc_new" 
-                                    VALUES (1,'2019-01-01 00:00','2019-01-01 00:00',0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0) 
-                            """)
                 query.exec()
 
                 query.prepare("""   CREATE TABLE IF NOT EXISTS 'list_base' (
@@ -199,12 +201,6 @@ class Database:
             query.bindValue(":d1_show", b_dict[key][3])
             query.bindValue(":d1_width", b_dict[key][4])
 
-            """query.bindValue(":id1", key)
-            query.bindValue(":d1_name", b_dict[key].cb_label)
-            query.bindValue(":d1_color", b_dict[key].color)
-            query.bindValue(":d1_show", b_dict[key].cb_check)
-            query.bindValue(":d1_width", b_dict[key].width)"""
-
             flag = query.exec()
             #self.test_result(flag)
 
@@ -276,13 +272,46 @@ class Database:
     def get_lastRecordDate(self):
         print("get_lastRecordDate")
         query = QSqlQuery()
-        query_str = """SELECT time FROM weslc_new ORDER by time DESC LIMIT 1"""
-        flag = query.exec(query_str)
-        #self.test_result(flag)
+        #test si table est vide
+        query_str = "SELECT count(*) FROM (select 0 from weslc_new limit 1)"
+        query.exec(query_str)
         while query.next():
-            date = query.value(0)
-        date = date[0:10]
-        #print("date=", date)
+            nbr = query.value(0)
+        #print ("nbr=",nbr)
+        if nbr != 0:
+            query_str = """SELECT time FROM weslc_new ORDER by time DESC LIMIT 1"""
+            query.exec(query_str)
+
+            while query.next():
+                date = query.value(0)
+            date = date[0:10]
+        else:
+            date = datetime.today().strftime("%Y-%m-%d")
+
+
+        print("date=", date)
+        return date
+
+    def get_firstRecordDate(self):
+        print("get_firstRecordDate")
+        query = QSqlQuery()
+        query_str = "SELECT count(*) FROM (select 0 from weslc_new limit 1)"
+        query.exec(query_str)
+        while query.next():
+            nbr = query.value(0)
+        print ("nbr=",nbr)
+        if nbr != 0:
+            query_str = """SELECT time FROM weslc_new ORDER by time ASC LIMIT 1"""
+            query.exec(query_str)
+
+            while query.next():
+                date = query.value(0)
+            print("date1er=",date)
+            date = date[0:10]
+        else:
+            date = datetime.today().strftime("%Y-%m-%d")
+
+        print("date=1er=", date)
         return date
 
     def get_nbr_records(self):
@@ -324,5 +353,13 @@ class Database:
             print("query OK !")
         else:
             print("query. ECHEC")
+
+    def get_current_base_name(self):
+        query = QSqlQuery()
+        query.prepare("""SELECT cur_base FROM list_base LIMIT 1 """)
+        query.exec()
+        while query.next():
+            name = query.value(0)
+        return name
 
 
