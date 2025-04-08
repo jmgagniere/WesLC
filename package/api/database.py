@@ -4,7 +4,7 @@ from PySide6.QtSql import QSqlQuery, QSqlDatabase
 import os
 from datetime import datetime
 
-class Database:
+class Database(QSqlDatabase):
     is_instantiated = False
 
     def __init__(self):
@@ -14,27 +14,28 @@ class Database:
             - weslc_new avec un premier record bidon
             - list_base avec les champs path_base, name_base, cur_base préremplie avec la base par défaut"""
 
+        super().__init__()
         if not Database.is_instantiated:
-            # Verification de l'exixtence de la base
+            # Verification de l'existence de la base
             # Get the current working directory
             ##print("The current working directory is:", current_directory)
             file_path = "database/baseWes.db"
             if os.path.exists(file_path):
                 print("The file exists.")
                 # création de la connexion
-                self.db = QSqlDatabase.addDatabase("QSQLITE")
-                self.db.setDatabaseName("database/baseWes.db")
+                db = QSqlDatabase.addDatabase("QSQLITE")
+                db.setDatabaseName("database/baseWes.db")
 
-                self.db.open()
+                db.open()
                 Database.is_instantiated = True
                 print("database has been instantiated")
             else:
                 print("The file does not exist.")
                 # création de la connexion
-                self.db = QSqlDatabase.addDatabase("QSQLITE")
-                self.db.setDatabaseName("database/baseWes.db")
+                db = QSqlDatabase.addDatabase("QSQLITE")
+                db.setDatabaseName("database/baseWes.db")
 
-                self.db.open()
+                db.open()
                 Database.is_instantiated = True
                 print("database has been instantiated")
                 # Creation des tables si elles n'existent pas
@@ -88,21 +89,22 @@ class Database:
                               """)
                 query.exec()
 
-                query.prepare("""   CREATE TABLE IF NOT EXISTS 'list_base' (
-                                "path_base"     TEXT,
-                                "name_base"     TEXT,
-                                "cur_base"      TEXT)
+                query.prepare("""   CREATE TABLE "list_base" (
+                                    "id"	INTEGER,
+	                                "cur_base"	TEXT NOT NULL,
+	                                UNIQUE("id"))
                                 """)
                 query.exec()
 
-                query.prepare(""" INSERT INTO "list_base"
-                                VALUES ('/Users/jmg/WesLC/database', 'baseWes.db', 'baseWes.db')
+                query.prepare(""" INSERT INTO "list_base" (id, cur_base)
+                                VALUES (1, 'baseWes.db')
                                 """)
                 query.exec()
 
 
         else:
             print("database has already been created")
+        print("Connection_name=", QSqlDatabase.database())
 
     # ************** Transfert FTP *****************
 
@@ -121,7 +123,7 @@ class Database:
         query.prepare("""INSERT INTO ftp_param (host, login, passwd)VALUES ('82.64.197.53', 'jmg-ftp', 'jmg-wes@lc') """)
 
         flag = query.exec()
-        self.test_result(flag)
+        #self.test_result(flag)
         return ['82.64.197.53', 'jmg-ftp', 'jmg-wes@lc']
 
     def get_transfert_param(self):
@@ -130,7 +132,7 @@ class Database:
         query = QSqlQuery()
         query_string = "SELECT host, login, passwd FROM ftp_param"
         flag = query.exec(query_string)
-        self.test_result(flag)
+        #self.test_result(flag)
 
         record = query.record()
         nbr_col = record.count()
@@ -147,7 +149,7 @@ class Database:
                 "Erreur!",
                 "Paramétres FTP absents"
             )
-            list = self.init_transfert_param()
+            list = Database.init_transfert_param(self)
         return list
 
     def save_transfert_param(self, param_list):
@@ -318,7 +320,7 @@ class Database:
         print("get_nbr_records")
         query = QSqlQuery()
         flag = query.exec("select count(*) from weslc_new")
-        self.test_result(flag)
+        #self.test_result(flag)
         while query.next():
             nb_record = query.value(0)
         return nb_record
@@ -329,14 +331,14 @@ class Database:
         query = QSqlQuery()
         query_str = """SELECT time_utc FROM weslc_new ORDER by time DESC LIMIT 1"""
         flag = query.exec(query_str)
-        self.test_result(flag)
+        #self.test_result(flag)
         while query.next():
             date = query.value(0)
         last = date[0:10]
 
         query_str = """SELECT time_utc FROM weslc_new ORDER by time ASC LIMIT 1"""
         flag = query.exec(query_str)
-        self.test_result(flag)
+        #self.test_result(flag)
         while query.next():
             date = query.value(0)
         deb = date[0:10]
@@ -346,7 +348,7 @@ class Database:
     def base_optimise(self):
         query = QSqlQuery()
         flag = query.exec("VACUUM")
-        self.test_result(flag)
+        #self.test_result(flag)
 
     def test_result(self, flag):
         if flag:
@@ -361,5 +363,13 @@ class Database:
         while query.next():
             name = query.value(0)
         return name
+
+    def change_current_database(self, name):
+        print("change_current_database to:", name)
+        query = QSqlQuery()
+        query.prepare("""REPLACE INTO list_base (id, cur_base) VALUES (:id, :nom) """)
+        query.bindValue(":id", 1)
+        query.bindValue(":nom", name)
+        query.exec()
 
 

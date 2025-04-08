@@ -2,24 +2,27 @@ import sys
 from functools import partial
 
 from PySide6.QtWidgets import QApplication, QMainWindow
+from new_ui.UI_mainWindow import Ui_MainWindow
 from PySide6 import QtCore, QtWidgets
 from pyqtgraph import PlotWidget
 import pyqtgraph as pg
 
-from new_ui.UI_mainWindow import Ui_MainWindow
+#from new_ui.UI_mainWindow import Ui_MainWindow
 from package.api.database import Database
 from package.api.PlotData import PlotData
 from configDialog import ConfigDialog
 from ftpDialog import FtpDialog
-from infosBaseDialog import InfosBaseDialog
+#from infosBaseDialog import InfosBaseDialog
 from baseDialog import BaseDialog
 
+#class MainWindow(QMainWindow, Ui_MainWindow):
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
 
         self.setupUi(self)
         self.setWindowTitle("WES - LC")
+        # 1ere connection et ouverture de la base
         self.db = Database()
         self.flag_firstPlot = True
         self.flag_fin_ajout_data_in_base = False
@@ -83,7 +86,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("init_plot")
 
         # récupération des parametres graphe en base
-        plot_param = self.db.get_plot_param()
+        plot_param = Database.get_plot_param(self)
         print("plot_param=",plot_param)
 
         for i, blo in enumerate(plot_param):
@@ -158,6 +161,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.updateViews(self.p2, self.p1)
         self.flag_firstPlot = False
+        #self.plot()
 
     def plot(self):
         print("plot ")
@@ -171,7 +175,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         fin = self.fin_dateTime.toString("yyyy-MM-dd hh:mm")
 
         # Lecture en base données recues sous forme de liste
-        data = self.db.get_datas_from_base(deb, fin)
+        data = Database.get_datas_from_base(self, deb, fin)
         plotData = PlotData(data)
 
         # Calcul de la consommation sur la période donnée
@@ -296,6 +300,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.dt_deb.setCalendarPopup(False)
             self.dt_fin.setCalendarPopup(False)
 
+
     def dt_deb_changed(self):
         print("deb_date_changed")
         self.deb_dateTime = self.dt_deb.dateTime()
@@ -367,7 +372,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def get_date_last_record(self):
         # Mise à jour des LineEdit à la date du dernier enregistrement en base
         print("get_date_last_record")
-        datedeb = self.db.get_lastRecordDate()
+        datedeb = Database.get_lastRecordDate(self)
         print(datedeb)
         self.deb_dateTime = QtCore.QDateTime.fromString(datedeb, ("yyyy-MM-dd"))
         datefin = self.deb_dateTime.toString("yyyy-MM-dd")
@@ -383,6 +388,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == '__main__':
+    #app.destroyed.connect(lambda: print("destroyed"))
+    #del app
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
     win = MainWindow()

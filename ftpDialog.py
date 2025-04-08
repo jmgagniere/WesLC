@@ -1,6 +1,7 @@
 import ftplib
 
 from PySide6 import QtWidgets, QtCore
+from PySide6.QtSql import QSqlDatabase
 
 from new_ui.UI_FTP_Dialog import Ui_Dialog
 from package.api.database import Database
@@ -20,10 +21,10 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
         self.setWindowTitle("FTP-Data")
         self.modify_widget()
         self.setup_connections()
+        #print("Connection_name=", QSqlDatabase.database())
 
-        self.db = Database()
         self.retrieve_ftp_param()
-        date = self.db.get_lastRecordDate()
+        date = Database.get_lastRecordDate(self)
         self.dateImport = QtCore.QDate.fromString(date, ("yyyy-MM-dd")).addDays(1)
         self.date_import.setDate(self.dateImport)
         self.te_infos_transfer.clear()
@@ -60,8 +61,7 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
 
     def retrieve_ftp_param(self):
         print("retrieve Ftp_param")
-        self.db = Database()
-        param_list = self.db.get_transfert_param()
+        param_list = Database.get_transfert_param(self)
         self.host = param_list[0]
         self.login = param_list[1]
         self.passwd = param_list[2]
@@ -81,7 +81,7 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
     def btn_save_param_clicked(self):
         print("Save Param transfert button clicked")
         list_param = [self.le_host.text(), self.le_login.text(), self.le_passwd.text()]
-        self.db.save_transfert_param(list_param)
+        Database.save_transfert_param(self, list_param)
 
     def btn_test_clicked(self):
         print("Transfert button clicked")

@@ -8,7 +8,6 @@ from infosBaseDialog import InfosBaseDialog
 
 class CsvTraitement:
     def __init__(self, dateImport):
-        self.db = Database()
         self.dateImport = dateImport
 
         print("dateImport=", self.dateImport)
@@ -30,7 +29,15 @@ class CsvTraitement:
         file_path_list = [path_to_file_temp, path_to_file_pulse, path_to_file_pince, path_to_file_teleinfo]
         file_data_list = [temp_data, pulse_data, pince_data, teleinfo_data]
         data_list = ["Temp", "Pulse", "Pince", "TéléInfo"]
+
         self.nb_row_attendu_list = [1442, 1441, 1441, 1442]
+        # list_i_time = liste d'index convertit en time
+        list_i_time = []
+        for j in range(1440):
+            list_i_time.append(self.convert_index_to_time_string(j))
+        #print("list_i_time", list_i_time)
+
+        list_position_trou = []
 
         for i in range(4):
             # Test existence fichiers à importer
@@ -102,15 +109,82 @@ class CsvTraitement:
             elif delta_row == -60:
                 QMessageBox.critical(None, " Info", "Passage à l'heure d'hiver ?")
             elif delta_row > 0:
-                pos_trou = self.find_trous(i, nb_row, file_data_list)
-                if pos_trou == "NOK":
-                    QMessageBox.critical(None, "Problème", "Journée incomplète !")
-                else:
-                    QMessageBox.critical(None, "Problème:", f" Manque {delta_row} Data pour {data_list[i]} en {pos_trou}")
-                self.fill_trous(i, delta_row)
+                #QMessageBox.critical(None, "Problème", "Journée incomplète !")
+                list_time = []
+                for j in range(nb_row):
+                    list_time.append(((file_data_list[i])[j])[0])
+                #print("list_time=", list_time)
 
+                c = list(filter(lambda x: x not in list_time, list_i_time ))
+                print("difference=",c)
+
+                list_position_trou.append([i, c])
 
         # fin du for
+        #print("file_data_list=", file_data_list)
+        # Recherche trous
+        print("")
+        print("list-trou=", list_position_trou)
+        # determine le nombre de trous par liste
+        nbr_trou_temp = 0
+        nbr_trou_pulse = 0
+        nbr_trou_pince = 0
+        nbr_trou_tinfos = 0
+        list_trou_temp = []
+        list_trou_pulse = []
+        list_trou_pince = []
+        list_trou_tinfos= []
+        for t in list_position_trou:
+            if t[0] == 0:
+                nbr_trou_temp = len(t[1])
+                list_trou_temp = list(t[1])
+            if t[0] == 1:
+                nbr_trou_pulse = len(t[1])
+                list_trou_pulse =list(t[1])
+            if t[0] == 2:
+                nbr_trou_pince = len(t[1])
+                list_trou_pince = list(t[1])
+            if t[0] == 3:
+                nbr_trou_tinfos = len(t[1])
+                list_trou_tinfos = list(t[1])
+
+        print("nbrtrous=", (nbr_trou_temp, nbr_trou_pulse, nbr_trou_pince, nbr_trou_tinfos))
+
+        # 2 possibilités soit on bouche les trous, soit on supprime dans les autres listes les times correspondant
+        # a priori le plus simple est de boucher
+
+        #print("list_i_time", list_i_time)
+        #print("list_trou_temp=", list_trou_temp)
+        if nbr_trou_temp > 0:
+            indices = [list_i_time.index(k) for k in list_trou_temp]
+            print("indices_temp=", indices)
+            for i in range(len(indices)):
+                index = indices[i]
+                file_data_list[0].insert(index, [list_trou_temp[i], '0', '0', '0'])
+            print("file_data_list[0]=",file_data_list[0])
+        if nbr_trou_pulse > 0:
+            indices = [list_i_time.index(k) for k in list_trou_pulse]
+            print("indices_pulse=", indices)
+            for i in range(len(indices)):
+                index = indices[i]
+                file_data_list[1].insert(index, [list_trou_pulse[i], '0.0'])
+            print("file_data_list[1]=",file_data_list[1])
+        if nbr_trou_pince > 0:
+            indices = [list_i_time.index(k) for k in list_trou_pince]
+            print("indices_pince=", indices)
+            for i in range(len(indices)):
+                index = indices[i]
+                file_data_list[2].insert(index, [list_trou_pince[i], '0.00', '0.00'])
+            print("file_data_list[2]=",file_data_list[2])
+        #print("file_data_list[3]=", file_data_list[3])
+        if nbr_trou_tinfos > 0:
+            indices = [list_i_time.index(k) for k in list_trou_tinfos]
+            print("indices_tinfos=", indices)
+            for i in range(len(indices)):
+                index = indices[i]
+                file_data_list[3].insert(index, [list_trou_tinfos[i], '0', '0','0', '0', '0'])
+            print("file_data_list[3]=",file_data_list[3])
+
 
         # Fusion des listes pour injection dans la base
         #self.final_list = []
@@ -144,31 +218,37 @@ class CsvTraitement:
             dateutc =  datelocal.toUTC().toString("yyyy-MM-dd hh:mm")
             sublist1.insert(2, dateutc)
 
-            ##print("sublist1=",sublist1)
+            print("sublist1=",sublist1)
             # Id, Time, time_utc, w1, w2, w3, pulse_1, pince_1, pince_2, base, ph1, ph2, ph3, pa):
-
-            recordBase = [int(sublist1[0]), sublist1[1],(sublist1[2]),
+            if len(sublist1) == 14: # tous les éléments existent
+                recordBase = [int(sublist1[0]), sublist1[1],(sublist1[2]),
                               float(sublist1[3]), float(sublist1[4]), float(sublist1[5]),
                               float(sublist1[6]),
                               float(sublist1[7]), float(sublist1[8]),
                               float(sublist1[9]), float(sublist1[10]), float(sublist1[11]), float(sublist1[12]), float(sublist1[13])]
+            else:
+                QMessageBox.critical(None, "Problème", "Valeurs manquantes !")
+                recordBase = [int(sublist1[0]), sublist1[1],(sublist1[2]),
+                              0.0, 0.0, 0.0,
+                              0.0,
+                              0.0, 0.0,
+                              0.0, 0.0, 0.0, 0.0, 0.0]
 
 
-            flag = self.db.add_record(recordBase)
+            flag = Database.add_record(self, recordBase)
         if not flag:
             QMessageBox.critical(
                 None,
                 "App Name - Error!",
-                #"Database Error: %s" % self.db.lastError().databaseText(),
                 "Echec ecriture en base"
             )
 
         print("Fin ajout base")
 
         # Vidage def ftp_temp
-        list = os.listdir('./ftp_temp')
+        listdir = os.listdir('./ftp_temp')
 
-        for f in list:
+        for f in listdir:
             os.remove(f"./ftp_temp/{f}")
 
 
@@ -191,14 +271,7 @@ class CsvTraitement:
         # Copie de la ligne avant le trou
         return
 
-    def find_trous(self, i, nb_row, data_list):
-        print("find_trous")
-        for j in range(len(data_list[i])):
-
-            i_time = self.convert_index_to_time_string(j)
-            print("i_time=", i_time," datalist=", (data_list[i])[j][0])
-            if i_time != (data_list[i])[j][0]:
-                print("itime=",i_time)
-                return i_time
-
-        return "NOK"
+    def find_trous(self, a , b):
+        c = list(filter(lambda x: x not in b, a))
+        #print(c)
+        return c

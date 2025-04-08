@@ -10,7 +10,7 @@ class ConfigDialog(QtWidgets.QDialog, Ui_Dialog):
         self.setupUi(self)
         self.setWindowTitle("Configuration")
 
-        self.db = Database()
+        #self.db = Database()
         self.init_widget()
 
         # Signaux
@@ -32,7 +32,7 @@ class ConfigDialog(QtWidgets.QDialog, Ui_Dialog):
                            self.spBox_ph1, self.spBox_ph2, self.spBox_ph3, self.spBox_pa]
 
         # - Récuperation des parametres en base
-        self.bloc_param = self.db.get_plot_param()
+        self.bloc_param = Database.get_plot_param(self)
         #print("bloc_param", self.bloc_param)
         # query_string = "SELECT id, name, color, state, width FROM plot_param"
         # self.bloc_param est une liste de liste, chaque sous liste contient les 5 éléments issus de query_string
@@ -115,7 +115,7 @@ class ConfigDialog(QtWidgets.QDialog, Ui_Dialog):
         blocs_data = dict(zip(self.key_list, self.bloc_param))
         #print("blocs_data", blocs_data)
 
-        self.db.save_plot_param(**blocs_data)
+        Database.save_plot_param(self,**blocs_data)
         self.done(QtWidgets.QDialog.DialogCode.Accepted)
 
     def choix_couleur(self, key):
