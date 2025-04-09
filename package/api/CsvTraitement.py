@@ -15,7 +15,7 @@ class CsvTraitement:
 
     def readCsvFiles(self):
         date = self.dateImport[5:10]
-        path_base = "ftp_temp" + '/'
+        #path_base = "ftp_temp" + '/'
 
         path_to_file_temp = f"ftp_temp/TP-{date}.csv"
         path_to_file_pulse = f"ftp_temp/PL-{date}.csv"
@@ -183,7 +183,7 @@ class CsvTraitement:
             for i in range(len(indices)):
                 index = indices[i]
                 file_data_list[3].insert(index, [list_trou_tinfos[i], '0', '0','0', '0', '0'])
-            print("file_data_list[3]=",file_data_list[3])
+            #print("file_data_list[3]=",file_data_list[3])
 
 
         # Fusion des listes pour injection dans la base
@@ -218,7 +218,7 @@ class CsvTraitement:
             dateutc =  datelocal.toUTC().toString("yyyy-MM-dd hh:mm")
             sublist1.insert(2, dateutc)
 
-            print("sublist1=",sublist1)
+            #print("sublist1=",sublist1)
             # Id, Time, time_utc, w1, w2, w3, pulse_1, pince_1, pince_2, base, ph1, ph2, ph3, pa):
             if len(sublist1) == 14: # tous les éléments existent
                 recordBase = [int(sublist1[0]), sublist1[1],(sublist1[2]),

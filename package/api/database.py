@@ -1,4 +1,5 @@
 from PySide6 import QtWidgets
+from PySide6.QtWidgets import QMessageBox
 from PySide6.QtSql import QSqlQuery, QSqlDatabase
 
 import os
@@ -8,6 +9,7 @@ class Database(QSqlDatabase):
     is_instantiated = False
 
     def __init__(self):
+        print("database.__init__")
         """ Si il n'existe aucune base on crée une nouvelle base avec les tables suivantes:
             - ftp_param avec les champs host, login, passwd prérempli
             - plot_param avec les champs id, name, color, state, width préremplis
@@ -25,7 +27,6 @@ class Database(QSqlDatabase):
                 # création de la connexion
                 db = QSqlDatabase.addDatabase("QSQLITE")
                 db.setDatabaseName("database/baseWes.db")
-
                 db.open()
                 Database.is_instantiated = True
                 print("database has been instantiated")
@@ -105,11 +106,12 @@ class Database(QSqlDatabase):
         else:
             print("database has already been created")
         print("Connection_name=", QSqlDatabase.database())
+        print("database.__init__ OUT")
 
     # ************** Transfert FTP *****************
 
     def init_transfert_param(self):
-        print("init_transfert_param")
+        print("database.init_transfert_param")
         query = QSqlQuery()
 
         query.exec("DROP TABLE IF EXISTS 'ftp_param' ")
@@ -124,10 +126,11 @@ class Database(QSqlDatabase):
 
         flag = query.exec()
         #self.test_result(flag)
+        print("database.init_transfert_param OUT")
         return ['82.64.197.53', 'jmg-ftp', 'jmg-wes@lc']
 
     def get_transfert_param(self):
-        print("get_transfert_param")
+        print("database.get_transfert_param")
 
         query = QSqlQuery()
         query_string = "SELECT host, login, passwd FROM ftp_param"
@@ -150,10 +153,11 @@ class Database(QSqlDatabase):
                 "Paramétres FTP absents"
             )
             list = Database.init_transfert_param(self)
+        print("database.get_transfert_param OUT")
         return list
 
     def save_transfert_param(self, param_list):
-        print("save_transfert_param")
+        print("database.save_transfert_param")
 
         query = QSqlQuery()
         query.exec("DELETE FROM ftp_param")
@@ -166,11 +170,13 @@ class Database(QSqlDatabase):
         query.bindValue(":passwd", param_list[2])
 
         flag = query.exec()
+        print("database.save_transfert_param OUT")
         #self.test_result(flag)
 
     # *************** Plot Param ******************
 
     def get_plot_param(self):
+        print("database.get_plot_param")
         query =  QSqlQuery()
         query_string = "SELECT id, name, color, state, width FROM plot_param"
         flag = query.exec(query_string)
@@ -184,10 +190,11 @@ class Database(QSqlDatabase):
                 sub_list.append(query.value(i))
             list.append(sub_list)
         #print("list_param=", list)
+        print("database.get_plot_param OUT")
         return list
 
     def save_plot_param(self, **b_dict):
-        print("save_plot_param")
+        print("database.save_plot_param")
         query = QSqlQuery()
         query.exec("DELETE FROM plot_param")
 
@@ -204,6 +211,7 @@ class Database(QSqlDatabase):
             query.bindValue(":d1_width", b_dict[key][4])
 
             flag = query.exec()
+            print("database.save_plot_param OUT")
             #self.test_result(flag)
 
     # ****************** Datas WES ********************
@@ -246,7 +254,7 @@ class Database(QSqlDatabase):
         return flag
 
     def get_datas_from_base(self, deb, fin):
-        print("get_datas_from_base", deb, " ", fin)
+        print("database.get_datas_from_base", deb, " ", fin)
 
         self.deb = deb
         self.fin = fin
@@ -269,10 +277,11 @@ class Database(QSqlDatabase):
                          query.value('pulse_1'), query.value('pince_1'), query.value('pince_2'),
                          query.value('ph1'), query.value('ph2'), query.value('ph3'), query.value('pa'),
                          query.value('base')])
+        print("database.get_datas_from_base OUT")
         return data
 
     def get_lastRecordDate(self):
-        print("get_lastRecordDate")
+        print("database.get_lastRecordDate")
         query = QSqlQuery()
         #test si table est vide
         query_str = "SELECT count(*) FROM (select 0 from weslc_new limit 1)"
@@ -292,10 +301,11 @@ class Database(QSqlDatabase):
 
 
         print("date=", date)
+        print("database.get_lastRecordDate OUT")
         return date
 
     def get_firstRecordDate(self):
-        print("get_firstRecordDate")
+        print("database.get_firstRecordDate")
         query = QSqlQuery()
         query_str = "SELECT count(*) FROM (select 0 from weslc_new limit 1)"
         query.exec(query_str)
@@ -314,36 +324,56 @@ class Database(QSqlDatabase):
             date = datetime.today().strftime("%Y-%m-%d")
 
         print("date=1er=", date)
+        print("database.get_firstRecordDate OUT")
         return date
 
     def get_nbr_records(self):
-        print("get_nbr_records")
+        print("database.get_nbr_records")
         query = QSqlQuery()
         flag = query.exec("select count(*) from weslc_new")
         #self.test_result(flag)
         while query.next():
             nb_record = query.value(0)
+        print("database.get_nbr_records OUT")
         return nb_record
 
     #----------------- Infos Base -----------------
 
     def base_periode(self):
+        print("database.base_periode")
+        #deb = "0000:00:00"
+        #last = "0000:00:00"
         query = QSqlQuery()
         query_str = """SELECT time_utc FROM weslc_new ORDER by time DESC LIMIT 1"""
-        flag = query.exec(query_str)
-        #self.test_result(flag)
+        query.exec(query_str)
         while query.next():
             date = query.value(0)
-        last = date[0:10]
+        try:
+            last = date[0:10]
+        except:
+            pass
 
         query_str = """SELECT time_utc FROM weslc_new ORDER by time ASC LIMIT 1"""
-        flag = query.exec(query_str)
-        #self.test_result(flag)
+        query.exec(query_str)
         while query.next():
             date = query.value(0)
-        deb = date[0:10]
+        try:
+            deb = date[0:10]
+        except:
+            pass
 
-        return (deb, last)
+        print("database.base_periode OUT")
+        try:
+            return (deb, last)
+        except: UnboundLocalError
+        QMessageBox.critical(
+            None,
+            "App Name - Error!",
+            """ Base VIDE !!!
+        FTP-Data pour un transfert en base."""
+
+        )
+        return ('0000-00-00', '0000-00-00')
 
     def base_optimise(self):
         query = QSqlQuery()
@@ -357,11 +387,13 @@ class Database(QSqlDatabase):
             print("query. ECHEC")
 
     def get_current_base_name(self):
+        print("database.get_current_base_name")
         query = QSqlQuery()
         query.prepare("""SELECT cur_base FROM list_base LIMIT 1 """)
         query.exec()
         while query.next():
             name = query.value(0)
+        print("database.get_current_base_name OUT")
         return name
 
     def change_current_database(self, name):
@@ -371,5 +403,6 @@ class Database(QSqlDatabase):
         query.bindValue(":id", 1)
         query.bindValue(":nom", name)
         query.exec()
+        print("change_current_database OUT")
 
 

@@ -11,16 +11,19 @@ from package.api.database import Database
 
 class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
     def __init__(self):
+        print("baseDialog.__init")
         super().__init__()
         self.setupUi(self)
         pass
-        self.db = Database()
+        #self.db = Database()
+        #self.db =QSqlDatabase.database()
 
         self.init_widgets()
         self.setup_connections()
+        print("baseDialog.__init OUT")
 
     def init_widgets(self):
-        print("init_widgets")
+        print("baseDialog.init_widgets")
         self.current_base_name = Database.get_current_base_name(self)
         print("current base=", self.current_base_name)
         self.gb_baseCourante.setTitle(self.current_base_name)
@@ -35,17 +38,20 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         date = Database.get_firstRecordDate(self)[0:10]
         self.firstRecord_date = QtCore.QDate.fromString(date, ("yyyy-MM-dd"))
         self.dt_firstRecord.setDate(self.firstRecord_date)
+        print("baseDialog.init_widgets OUT")
 
 
     def setup_connections(self):
+        print("baseDialog.setup_connections")
         self.btn_infosBase.clicked.connect(self.btn_infosBase_clicked)
         self.btn_optimiseBase.clicked.connect(self.btn_optimiseBase_clicked)
         self.btn_base_OK.clicked.connect(self.btn_base_OK_clicked)
         self.btn_loadBase.clicked.connect(self.btn_loadBase_clicked)
         self.tree_view.clicked.connect(self.tree_view_clicked)
+        print("baseDialog.setup_connections OUT")
 
     def btn_infosBase_clicked(self):
-        print("infosBase btn clicked")
+        print("baseDialog.btn_infosBase_clicked")
         path = "database/"  + self.current_base_name
         taille = os.path.getsize(path)
         nbr_row = Database.get_nbr_records(self)
@@ -55,29 +61,33 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.te_infosBase.append('Nbre enreg en base = ' + str(nbr_row))
         self.te_infosBase.append('Nbre de jours en base = ' + str(nbr_jour))
         self.te_infosBase.append('Période du:\n' + first + '   au:\n' + last + '\n')
+        print("baseDialog.btn_infosBase_clicked OUT")
 
     def btn_optimiseBase_clicked(self):
-        print("btn_optimiseBase clicked")
+        print("baseDialog.btn_optimiseBase_clicked")
         Database.base_optimise(self)
         taille = os.path.getsize("database/baseWes.db")
         self.te_infosBase.append('Nouvelle Taille du fichier = ' + str(taille) + ' octets')
+        print("baseDialog.btn_optimiseBase_clicked OUT")
 
     def btn_base_OK_clicked(self):
-        print("btn_base_OK_clicked")
+        print("baseDialog.btn_base_OK_clicked")
         self.done(QtWidgets.QDialog.DialogCode.Accepted)
+        print("baseDialog.btn_base_OK_clicked OUT")
 
     def tree_view_clicked(self):
-        print("tree_view_clicked")
+        print("baseDialog.tree_view_clicked")
         # print item from first column
         #index = self.tree_view.selectedIndexes()[0]
         index = self.tree_view.currentIndex()
         self.new_base_to_load = self.tree_view.model().data(index)
         print("item",self.new_base_to_load)
         self.btn_loadBase.setEnabled(True)
+        print("baseDialog.tree_view_clicked OUT")
 
 
     def btn_loadBase_clicked(self):
-        print("btn_loadBase_clicked")
+        print("baseDialog.btn_loadBase_clicked")
         print("new_base_to_load=", self.new_base_to_load)
         # écrit nouvelle base courante en base
         Database.change_current_database(self, self.new_base_to_load)
@@ -85,11 +95,16 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         #Database.close(self)
         print("Connection_name=", QSqlDatabase.database())
         QSqlDatabase.database().close()
-
-
+        # ouverture nouvelle base current
+        db = QSqlDatabase.addDatabase("QSQLITE")
+        db.setDatabaseName("database/baseWes.db")
+        db.open()
+        Database.is_instantiated = True
+        print("Connection_name=", QSqlDatabase.database())
+        print("baseDialog.btn_loadBase_clicked OUT")
 
     def get_list_of_existing_base(self):
-        print("get_list_of_existing_base")
+        print("baseDialog.get_list_of_existing_base")
         path = "database/*.db"
 
         list_files = []
@@ -119,6 +134,7 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.tree_view.setColumnWidth(0,200)
         self.tree_view.setColumnWidth(1, 100)
         self.tree_view.setColumnWidth(3, 100)
+        print("baseDialog.get_list_of_existing_base OUT")
 
 
 

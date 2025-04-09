@@ -18,6 +18,7 @@ from baseDialog import BaseDialog
 #class MainWindow(QMainWindow, Ui_MainWindow):
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
+        print("main.__init__")
         super().__init__()
 
         self.setupUi(self)
@@ -31,8 +32,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.init_widget()
         self.setup_connections()
         self.init_plot()
+        print("main.__init__ OUT")
 
     def init_widget(self):
+        print("main.init_widget")
         # Widgets Légende
         self.key_list = []
         self.cb_val = []
@@ -69,8 +72,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.p1.setMinimumSize(QtCore.QSize(1000, 400))
         self.main_gridLayout.addWidget(self.p1, 1, 0, -1, -1)
+        print("main.init_widget OUT")
 
     def setup_connections(self):
+        print("main.setup_connections")
         self.cb_calendrier.stateChanged.connect(self.cb_calendrier_stateChanged)
         self.dt_deb.dateTimeChanged.connect(self.dt_deb_changed)
         self.dt_fin.dateTimeChanged.connect(self.dt_fin_changed)
@@ -81,13 +86,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionQuit.triggered.connect(self.close)
         self.actionConfig_Legende.triggered.connect(self.btn_config_clicked)
         self.actionactionBase.triggered.connect(self.actionBase_triggered)
+        print("main.setup_connections OUT")
 
     def init_plot(self):
-        print("init_plot")
+        print("main.init_plot")
 
         # récupération des parametres graphe en base
         plot_param = Database.get_plot_param(self)
-        print("plot_param=",plot_param)
+        #print("plot_param=",plot_param)
 
         for i, blo in enumerate(plot_param):
             #      Id       name    color   cb etat width
@@ -100,10 +106,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.le_color.append([blo[2], self.list_le_widget[i]])
 
         self.dict_cb = dict(zip(self.key_list, self.cb_val))
-        print("dict_cb=",self.dict_cb)
+        #print("dict_cb=",self.dict_cb)
 
         self.dict_le = dict(zip(self.key_list, self.le_color))
-        print("dict_le", self.dict_le)
+        #print("dict_le", self.dict_le)
 
         # Affichage valeurs checkBox et lineEdit
         for key, val in self.dict_cb.items():
@@ -162,9 +168,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.updateViews(self.p2, self.p1)
         self.flag_firstPlot = False
         #self.plot()
+        print("main.init_plot OUT")
 
     def plot(self):
-        print("plot ")
+        print("main.plot ")
         print(" plot button clicked")
         # Mise à jour des LineEdit au dernier jour d'enregistrement en base
         if self.flag_fin_ajout_data_in_base:
@@ -255,9 +262,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.line_pa.clear()
 
             self.updateViews(self.p2, self.p1)
+        print("main.plot OUT")
 
     def update_crosshair(self, e):
-        print("update_crosshair")
+        print("main.update_crosshair")
         pos = e[0]
         if self.p1.sceneBoundingRect().contains(pos):
             # print("update_crosshair")
@@ -266,30 +274,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # self.crosshair_h.setPos(mousePoint.y())
             pos_x = int(mousePoint.x())
             # print("pos=", pos_x)
-            if pos_x in self.xdict:
-                self.le_base.setText(self.xdict[pos_x])
-                self.le_val_1w1.setText(str(self.w1_dict[pos_x]))
-                self.le_val_1w2.setText(str(self.w2_dict[pos_x]))
-                self.le_val_1w3.setText(str(self.w3_dict[pos_x]))
+            try:
+                if pos_x in self.xdict:
+                    self.le_base.setText(self.xdict[pos_x])
+                    self.le_val_1w1.setText(str(self.w1_dict[pos_x]))
+                    self.le_val_1w2.setText(str(self.w2_dict[pos_x]))
+                    self.le_val_1w3.setText(str(self.w3_dict[pos_x]))
 
-                self.le_val_pulse1.setText(str(int(self.pulse1_dict[pos_x] * 1000)))
-                self.le_val_pince1.setText(str(int(self.pince1_dict[pos_x] * 1000)))
-                self.le_val_pince2.setText(str(int(self.pince2_dict[pos_x] * 1000)))
-                self.le_val_ph1.setText(str(self.ph1_dict[pos_x]))
-                self.le_val_ph2.setText(str(self.ph2_dict[pos_x]))
-                self.le_val_ph3.setText(str(self.ph3_dict[pos_x]))
-                self.le_val_pa.setText(str(self.pa_dict[pos_x] * 1000))
+                    self.le_val_pulse1.setText(str(int(self.pulse1_dict[pos_x] * 1000)))
+                    self.le_val_pince1.setText(str(int(self.pince1_dict[pos_x] * 1000)))
+                    self.le_val_pince2.setText(str(int(self.pince2_dict[pos_x] * 1000)))
+                    self.le_val_ph1.setText(str(self.ph1_dict[pos_x]))
+                    self.le_val_ph2.setText(str(self.ph2_dict[pos_x]))
+                    self.le_val_ph3.setText(str(self.ph3_dict[pos_x]))
+                    self.le_val_pa.setText(str(self.pa_dict[pos_x] * 1000))
+            except AttributeError:
+                pass
+        print("main.update_crosshair OUT")
 
     def updateViews(self, p2, p1):
-        print("updateViews")
+        print("main.updateViews")
         p2.setGeometry(p1.getViewBox().sceneBoundingRect())
         p2.linkedViewChanged(p1.getViewBox(), p2.XAxis)
+        print("main.updateViews OUT")
 
     def checkBox_changed(self, id, state):
         print(f"checkBox {id} state changed to {state}")
         if id == "base":
             self.cb_base_clicked()
         self.plot()
+        print("main.checkBox_changed OUT")
 
     def cb_calendrier_stateChanged(self, state):
         print("calendrier on=", state)
@@ -299,6 +313,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.dt_deb.setCalendarPopup(False)
             self.dt_fin.setCalendarPopup(False)
+        print("main.cb_calendrier_stateChanged OUT")
 
 
     def dt_deb_changed(self):
@@ -317,6 +332,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # le graphe sera mis à jour soit nouvelle fin ou bouton plot
         if periode < 32:
             self.plot()
+        print("main.dt_deb_changed OUT")
 
     def dt_fin_changed(self):
         print("fin_date_changed")
@@ -329,14 +345,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 "Date début > Date fin"
             )
         self.plot()
+        print("main.dt_fin_changed OUT")
 
 
     def btn_config_clicked(self):
-        print("btn_config clicked")
+        print("main.btn_config clicked")
         configDialog =  ConfigDialog()
         result = configDialog.exec()
         if result == QtWidgets.QDialog.DialogCode.Accepted:
             print("OKOK")
+        print("main.btn_config clicked OUT")
 
 
     def btn_ftp_clicked(self):
@@ -348,14 +366,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.flag_fin_ajout_data_in_base = True
 
     def actionBase_triggered(self):
-        print("actionBase triggered")
+        print("main.actionBase triggered")
         baseDialog = BaseDialog()
         result = baseDialog.exec()
         if result == QtWidgets.QDialog.DialogCode.Accepted:
             print("okok")
+        print("main.actionBase triggered OUT")
 
 
     def cb_base_clicked(self):
+        print("main.cb_base_clicked")
         print("cb_base_StateChanged", self.cb_base.isChecked())
         if self.cb_base.isChecked() == True:
             self.cb_ph1.setCheckState(QtCore.Qt.CheckState.Checked)
@@ -367,11 +387,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.cb_ph2.setCheckState(QtCore.Qt.CheckState.Unchecked)
             self.cb_ph3.setCheckState(QtCore.Qt.CheckState.Unchecked)
             self.cb_pa.setCheckState(QtCore.Qt.CheckState.Unchecked)
+        print("main.cb_base_clicked OUT")
 
 
     def get_date_last_record(self):
         # Mise à jour des LineEdit à la date du dernier enregistrement en base
-        print("get_date_last_record")
+        print("main.get_date_last_record")
         datedeb = Database.get_lastRecordDate(self)
         print(datedeb)
         self.deb_dateTime = QtCore.QDateTime.fromString(datedeb, ("yyyy-MM-dd"))
@@ -379,11 +400,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.fin_dateTime = QtCore.QDateTime.fromString(datefin, "yyyy-MM-dd").addSecs(86340)
         self.dt_deb.setDateTime(self.deb_dateTime)
         self.dt_fin.setDateTime(self.fin_dateTime)
+        print("main.get_date_last_record OUT")
 
     def periode(self, deb, fin):
-        #print(" periode ")
+        print("main.periode ")
         periode = deb.daysTo(fin)
         print("periode=", periode)
+        print("main.periode OUT")
         return periode
 
 
