@@ -4,7 +4,6 @@ from PySide6.QtCore import QDateTime
 from PySide6.QtWidgets import QMessageBox
 
 from package.api.database import Database
-from infosBaseDialog import InfosBaseDialog
 
 class CsvTraitement:
     def __init__(self, dateImport):

@@ -1,6 +1,7 @@
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMessageBox
 from PySide6.QtSql import QSqlQuery, QSqlDatabase
+from PySide6.QtCore import QDateTime
 
 import os
 from datetime import datetime
@@ -344,7 +345,7 @@ class Database(QSqlDatabase):
         #deb = "0000:00:00"
         #last = "0000:00:00"
         query = QSqlQuery()
-        query_str = """SELECT time_utc FROM weslc_new ORDER by time DESC LIMIT 1"""
+        query_str = """SELECT Time FROM weslc_new ORDER by Time DESC LIMIT 1"""
         query.exec(query_str)
         while query.next():
             date = query.value(0)
@@ -353,10 +354,11 @@ class Database(QSqlDatabase):
         except:
             pass
 
-        query_str = """SELECT time_utc FROM weslc_new ORDER by time ASC LIMIT 1"""
+        query_str = """SELECT Time FROM weslc_new ORDER by Time ASC LIMIT 1"""
         query.exec(query_str)
         while query.next():
             date = query.value(0)
+            print("datedeb=",date)
         try:
             deb = date[0:10]
         except:
@@ -376,9 +378,11 @@ class Database(QSqlDatabase):
         return ('0000-00-00', '0000-00-00')
 
     def base_optimise(self):
+        print("database.base_optimise")
         query = QSqlQuery()
         flag = query.exec("VACUUM")
         #self.test_result(flag)
+        print("database.base_optimise OUT")
 
     def test_result(self, flag):
         if flag:
@@ -386,23 +390,51 @@ class Database(QSqlDatabase):
         else:
             print("query. ECHEC")
 
-    def get_current_base_name(self):
-        print("database.get_current_base_name")
+    def get_current_base_name_in_base(self):
+        print("database.get_current_base_name_in_base")
         query = QSqlQuery()
         query.prepare("""SELECT cur_base FROM list_base LIMIT 1 """)
         query.exec()
         while query.next():
             name = query.value(0)
-        print("database.get_current_base_name OUT")
+        print("database.get_current_base_name_in_base OUT")
         return name
 
-    def change_current_database(self, name):
-        print("change_current_database to:", name)
+    def change_current_database_in_base(self, name):
+        print("database.change_current_database_in_base")
+        print("change_current_database_in_base to:", name)
         query = QSqlQuery()
         query.prepare("""REPLACE INTO list_base (id, cur_base) VALUES (:id, :nom) """)
         query.bindValue(":id", 1)
         query.bindValue(":nom", name)
         query.exec()
-        print("change_current_database OUT")
+        print("database.change_current_database_in_base OUT")
+
+        db1 = QSqlDatabase.addDatabase("QSQLITE")
+        print("Opening Connection_name=", QSqlDatabase.database())
+        db1.setDatabaseName("database/baseWes.db")
+        db1.open()
+        query = QSqlQuery(db1)
+        query.prepare("""REPLACE INTO list_base (id, cur_base) VALUES (:id, :nom) """)
+        query.bindValue(":id", 1)
+        query.bindValue(":nom", name)
+        query.exec()
+        print("Closing Connection_name=", QSqlDatabase.database())
+        QSqlDatabase.database().close()
+
+    def split_base(self,date):
+        print("database.split_base")
+        #convert date to time in base
+        split_time = QDateTime.toString(date, "yyyy-MM-dd hh:mm")
+        print("split_time",split_time)
+        print("Connection_name=", QSqlDatabase.database())
+        query = QSqlQuery()
+        query.prepare(""" DELETE FROM weslc_new WHERE Time < :timesplit """)
+        query.bindValue(":timesplit", split_time)
+        flag = query.exec()
+        print("flag=", flag)
+
+
+        print("database.split_base OUT")
 
 

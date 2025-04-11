@@ -1,21 +1,19 @@
 import sys
 from functools import partial
 
+from PySide6.QtSql import QSqlDatabase
 from PySide6.QtWidgets import QApplication, QMainWindow
 from new_ui.UI_mainWindow import Ui_MainWindow
 from PySide6 import QtCore, QtWidgets
 from pyqtgraph import PlotWidget
 import pyqtgraph as pg
 
-#from new_ui.UI_mainWindow import Ui_MainWindow
 from package.api.database import Database
 from package.api.PlotData import PlotData
 from configDialog import ConfigDialog
 from ftpDialog import FtpDialog
-#from infosBaseDialog import InfosBaseDialog
 from baseDialog import BaseDialog
 
-#class MainWindow(QMainWindow, Ui_MainWindow):
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         print("main.__init__")
@@ -25,6 +23,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle("WES - LC")
         # 1ere connection et ouverture de la base
         self.db = Database()
+        # lecture de la base courante en baseWes.db
+        base = Database.get_current_base_name_in_base(self)
+        path_base_to_load = f"database/{base}"
+        print("Old Connection_name=", QSqlDatabase.database())
+        QSqlDatabase.database().close()
+        # ouverture nouvelle base current
+        db = QSqlDatabase.addDatabase("QSQLITE")
+        db.setDatabaseName(path_base_to_load)
+        db.open()
+        Database.is_instantiated = True
+        print("New Connection_name=", QSqlDatabase.database())
+        self.setWindowTitle(f"WES - LC    {base}")
         self.flag_firstPlot = True
         self.flag_fin_ajout_data_in_base = False
 
@@ -80,8 +90,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.dt_deb.dateTimeChanged.connect(self.dt_deb_changed)
         self.dt_fin.dateTimeChanged.connect(self.dt_fin_changed)
 
-        self.btn_plot.clicked.connect(self.plot)
+        self.btn_plot.clicked.connect(self.btn_plot_clicked)
         self.btn_ftp.clicked.connect(self.btn_ftp_clicked)
+        self.btn_quit.clicked.connect(self.close)
 
         self.actionQuit.triggered.connect(self.close)
         self.actionConfig_Legende.triggered.connect(self.btn_config_clicked)
@@ -121,8 +132,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             val[2].stateChanged.connect(partial(self.checkBox_changed, key))
 
         for key, val in self.dict_le.items():
-            str = "QLineEdit { background:" + val[0] +";}"
-            val[1].setStyleSheet(str)
+            strg = "QLineEdit { background:" + val[0] +";}"
+            val[1].setStyleSheet(strg)
 
         # mise en place graph_Widget
         self.p1.getPlotItem().scene().addItem(self.p2)
@@ -265,7 +276,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("main.plot OUT")
 
     def update_crosshair(self, e):
-        print("main.update_crosshair")
+        #print("main.update_crosshair")
         pos = e[0]
         if self.p1.sceneBoundingRect().contains(pos):
             # print("update_crosshair")
@@ -290,7 +301,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.le_val_pa.setText(str(self.pa_dict[pos_x] * 1000))
             except AttributeError:
                 pass
-        print("main.update_crosshair OUT")
+        #print("main.update_crosshair OUT")
 
     def updateViews(self, p2, p1):
         print("main.updateViews")
@@ -307,7 +318,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def cb_calendrier_stateChanged(self, state):
         print("calendrier on=", state)
-        if self.cb_calendrier.isChecked() == True:
+        if self.cb_calendrier.isChecked():
             self.dt_deb.setCalendarPopup(True)
             self.dt_fin.setCalendarPopup(True)
         else:
@@ -365,6 +376,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print("OKOK")
             self.flag_fin_ajout_data_in_base = True
 
+    def btn_plot_clicked(self):
+        print("main.btn_plot_clicked")
+        dbx = QSqlDatabase.database()
+        name = QSqlDatabase.databaseName(dbx)
+        win.setWindowTitle(name[9:])
+        self.plot()
+        print("main.btn_plot_clicked OUT")
+
+
     def actionBase_triggered(self):
         print("main.actionBase triggered")
         baseDialog = BaseDialog()
@@ -377,7 +397,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def cb_base_clicked(self):
         print("main.cb_base_clicked")
         print("cb_base_StateChanged", self.cb_base.isChecked())
-        if self.cb_base.isChecked() == True:
+        if self.cb_base.isChecked():
             self.cb_ph1.setCheckState(QtCore.Qt.CheckState.Checked)
             self.cb_ph2.setCheckState(QtCore.Qt.CheckState.Checked)
             self.cb_ph3.setCheckState(QtCore.Qt.CheckState.Checked)
@@ -395,7 +415,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("main.get_date_last_record")
         datedeb = Database.get_lastRecordDate(self)
         print(datedeb)
-        self.deb_dateTime = QtCore.QDateTime.fromString(datedeb, ("yyyy-MM-dd"))
+        self.deb_dateTime = QtCore.QDateTime.fromString(datedeb, "yyyy-MM-dd")
         datefin = self.deb_dateTime.toString("yyyy-MM-dd")
         self.fin_dateTime = QtCore.QDateTime.fromString(datefin, "yyyy-MM-dd").addSecs(86340)
         self.dt_deb.setDateTime(self.deb_dateTime)
@@ -411,8 +431,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == '__main__':
-    #app.destroyed.connect(lambda: print("destroyed"))
-    #del app
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
     win = MainWindow()
