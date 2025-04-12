@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'UI_baseDialog.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.3
+## Created by: Qt User Interface Compiler version 6.9.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -17,8 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QDateEdit, QDialog,
     QGridLayout, QGroupBox, QHeaderView, QLabel,
-    QLayout, QPushButton, QSizePolicy, QTextEdit,
-    QTreeView, QVBoxLayout, QWidget)
+    QLayout, QPushButton, QRadioButton, QSizePolicy,
+    QTextEdit, QTreeView, QVBoxLayout, QWidget)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -139,6 +139,12 @@ class Ui_Dialog(object):
         self.tree_view = QTreeView(self.gb_splitBase)
         self.tree_view.setObjectName(u"tree_view")
         self.tree_view.setGeometry(QRect(20, 168, 687, 213))
+        self.rb_garde_apres_date_split = QRadioButton(self.gb_splitBase)
+        self.rb_garde_apres_date_split.setObjectName(u"rb_garde_apres_date_split")
+        self.rb_garde_apres_date_split.setGeometry(QRect(400, 40, 165, 20))
+        self.rb_garde_avant_date_split = QRadioButton(self.gb_splitBase)
+        self.rb_garde_avant_date_split.setObjectName(u"rb_garde_avant_date_split")
+        self.rb_garde_avant_date_split.setGeometry(QRect(400, 66, 165, 20))
 
         self.retranslateUi(Dialog)
 
@@ -158,5 +164,7 @@ class Ui_Dialog(object):
         self.cb_autoriseSplit.setText(QCoreApplication.translate("Dialog", u"Autorise Split", None))
         self.btn_splitBase.setText(QCoreApplication.translate("Dialog", u"Split Base", None))
         self.btn_loadBase.setText(QCoreApplication.translate("Dialog", u"Charge autre base", None))
+        self.rb_garde_apres_date_split.setText(QCoreApplication.translate("Dialog", u"Garde apr\u00e8s Date Split", None))
+        self.rb_garde_avant_date_split.setText(QCoreApplication.translate("Dialog", u"Garde avant Date Split", None))
     # retranslateUi
 

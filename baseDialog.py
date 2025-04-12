@@ -1,12 +1,13 @@
 #import datetime from datetime
 import os, glob, time, sys, tarfile
 import datetime as dt
-from itertools import compress
+
 
 from PySide6 import QtWidgets, QtCore
-from PySide6.QtWidgets import QFileSystemModel
+from PySide6.QtWidgets import QFileSystemModel, QInputDialog, QLineEdit
 from PySide6.QtCore import QDir, Qt
-from PySide6.QtSql import QSqlQuery, QSqlDatabase
+from PySide6.QtSql import QSqlDatabase
+
 
 from new_ui.UI_baseDialog import Ui_Dialog
 from package.api.database import Database
@@ -28,10 +29,14 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         dbx = QSqlDatabase.database()
         name = QSqlDatabase.databaseName(dbx)
         self.gb_baseCourante.setTitle(name[9:])
+        self.dt_splitRecord.setCalendarPopup(True)
+        self.dt_firstRecord.setCalendarPopup(True)
+        self.dt_lastRecord.setCalendarPopup(True)
 
         self.btn_infosBase_clicked()
         self.btn_loadBase.setEnabled(False)
         self.get_list_of_existing_base()
+        self.rb_garde_apres_date_split.setChecked(True)
 
         date = Database.get_lastRecordDate(self)[0:10]
         self.deb_last_record_date = QtCore.QDate.fromString(date, ("yyyy-MM-dd"))
@@ -52,6 +57,8 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.btn_loadBase.clicked.connect(self.btn_loadBase_clicked)
         self.btn_splitBase.clicked.connect(self.btn_splitBase_clicked)
         self.tree_view.clicked.connect(self.tree_view_clicked)
+        self.rb_garde_apres_date_split.toggled.connect(lambda :self.rb_garde_toggled(self.rb_garde_apres_date_split))
+        self.rb_garde_avant_date_split.toggled.connect(lambda: self.rb_garde_toggled(self.rb_garde_avant_date_split))
         print("baseDialog.setup_connections OUT")
 
     def btn_infosBase_clicked(self):
@@ -125,6 +132,11 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         print("baseDialog.btn_loadBase_clicked OUT")
         #win.setWindowTitle(f"WES - LC base:{self.new_base_to_load}")
 
+    def rb_garde_toggled(self,rbtn):
+        print("rb_garde_toggled")
+
+        print("rb_garde_toggled OUT")
+
     def get_list_of_existing_base(self):
         print("baseDialog.get_list_of_existing_base")
         path = "database/*.db"
@@ -177,15 +189,30 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
 
         with tarfile.open(name + '.bz', "w:bz2") as tar:
             tar.add(name, 'baseWes_full.db')
-        #print("time_stop=", dt.datetime.now())
 
+        # determine si on garde les enregistrements avant ou après date de split
+        if self.rb_garde_apres_date_split.isChecked():
+            save_after = True
+        else:
+            save_after = False
 
-
-        """# récupere la date du split
+        # récupere la date du split
         dt_split = self.dt_splitRecord.dateTime()
         #date = QtCore.QDateTime.toString(dt_split, "yyyy-MM-dd")
         print("dt_split=",dt_split)
-        Database.split_base(self, dt_split)"""
+        Database.split_base(self, dt_split, save_after)
+
+        basename, ok = QInputDialog.getText(self,"Nouveau nom :",
+                                            "Nouveau nom pour la base:", QLineEdit.Normal)
+        if ok and basename:
+            print("base_name=", basename)
+            Database.change_current_database_in_base(self, basename)
+            # ferme les connexions à la base
+            print("Old Connection_name=", QSqlDatabase.database())
+            QSqlDatabase.database().close()
+            os.rename(name, "./database/" + basename)
+
+            #
 
         print("baseDialog.btn_splitBase_clicked OUT")
 

@@ -274,6 +274,32 @@
      </rect>
     </property>
    </widget>
+   <widget class="QRadioButton" name="rb_garde_apres_date_split">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>40</y>
+      <width>165</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Garde après Date Split</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="rb_garde_avant_date_split">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>66</y>
+      <width>165</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Garde avant Date Split</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

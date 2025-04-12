@@ -422,14 +422,17 @@ class Database(QSqlDatabase):
         print("Closing Connection_name=", QSqlDatabase.database())
         QSqlDatabase.database().close()
 
-    def split_base(self,date):
+    def split_base(self,date, save_after):
         print("database.split_base")
         #convert date to time in base
         split_time = QDateTime.toString(date, "yyyy-MM-dd hh:mm")
         print("split_time",split_time)
         print("Connection_name=", QSqlDatabase.database())
         query = QSqlQuery()
-        query.prepare(""" DELETE FROM weslc_new WHERE Time < :timesplit """)
+        if save_after:
+            query.prepare(""" DELETE FROM weslc_new WHERE Time < :timesplit """)
+        else:
+            query.prepare(""" DELETE FROM weslc_new WHERE Time >= :timesplit """)
         query.bindValue(":timesplit", split_time)
         flag = query.exec()
         print("flag=", flag)
