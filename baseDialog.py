@@ -2,12 +2,10 @@
 import os, glob, time, sys, tarfile
 import datetime as dt
 
-
 from PySide6 import QtWidgets, QtCore
 from PySide6.QtWidgets import QFileSystemModel, QInputDialog, QLineEdit
 from PySide6.QtCore import QDir, Qt
 from PySide6.QtSql import QSqlDatabase
-
 
 from new_ui.UI_baseDialog import Ui_Dialog
 from package.api.database import Database
@@ -26,8 +24,10 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
     def init_widgets(self):
         print("baseDialog.init_widgets")
         # change le nom de la base dans le groupBox
-        dbx = QSqlDatabase.database()
-        name = QSqlDatabase.databaseName(dbx)
+        db = QSqlDatabase.database("con_base_cur", True)
+        print("connection names = ", QSqlDatabase.connectionNames())
+        name = QSqlDatabase.databaseName(db)
+        print("database name =", name)
         self.gb_baseCourante.setTitle(name[9:])
         self.dt_splitRecord.setCalendarPopup(True)
         self.dt_firstRecord.setCalendarPopup(True)
@@ -63,9 +63,12 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
 
     def btn_infosBase_clicked(self):
         print("baseDialog.btn_infosBase_clicked")
-        #name = Database.get_current_base_name_in_base(self)
-        dbx = QSqlDatabase.database()
-        name = QSqlDatabase.databaseName(dbx)
+        db = QSqlDatabase.database("con_base_cur", True)
+        print("connection names = ", QSqlDatabase.connectionNames())
+        name = QSqlDatabase.databaseName(db)
+        print("database name =", name)
+        #flag = db.open()
+        #print("flag=", flag)
         #print("name=",name)
         taille = os.path.getsize(name)
         nbr_row = Database.get_nbr_records(self)
@@ -85,8 +88,10 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
     def btn_optimiseBase_clicked(self):
         print("baseDialog.btn_optimiseBase_clicked")
         Database.base_optimise(self)
-        dbx = QSqlDatabase.database()
-        name = QSqlDatabase.databaseName(dbx)
+        db = QSqlDatabase.database("con_base_cur", True)
+        print("connection names = ", QSqlDatabase.connectionNames())
+        name = QSqlDatabase.databaseName(db)
+
         taille = os.path.getsize(name)
         self.te_infosBase.append('Nouvelle Taille du fichier = ' + str(taille) + ' octets')
         print("baseDialog.btn_optimiseBase_clicked OUT")
@@ -115,20 +120,19 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         path_base_to_load = f"database/{self.new_base_to_load}"
         # cloture ancienne base
         #Database.close(self)
-        print("Old Connection_name=", QSqlDatabase.database())
-        QSqlDatabase.database().close()
+        #print("Old Connection_name=", QSqlDatabase.database())
+        #QSqlDatabase.database().close()
+
         # ouverture nouvelle base current
-        db = QSqlDatabase.addDatabase("QSQLITE")
+        db = QSqlDatabase.database("con_base_cur", True)
         db.setDatabaseName(path_base_to_load)
-        db.open()
-        Database.is_instantiated = True
+        flag = db.open()
+        print("flagncbaseopen=",flag)
 
-        # change le nom de la base dans le groupBox
-        dbx = QSqlDatabase.database()
-        name = QSqlDatabase.databaseName(dbx)
-        self.gb_baseCourante.setTitle(name[9:])
+        self.gb_baseCourante.setTitle(path_base_to_load[9:])
+        self.te_infosBase.clear()
+        self.btn_infosBase_clicked()
 
-        print("New Connection_name=", QSqlDatabase.database())
         print("baseDialog.btn_loadBase_clicked OUT")
         #win.setWindowTitle(f"WES - LC base:{self.new_base_to_load}")
 
@@ -180,8 +184,10 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.te_infosBase.append("\nArchivage en cours...\n")
         # Compression de la base pour une sauvegarde avant destruction des records
         ## recupère nom de la base
-        dbx = QSqlDatabase.database()
-        name = QSqlDatabase.databaseName(dbx)
+        db = QSqlDatabase.database("con_base_cur", True)
+        print("connection names = ", QSqlDatabase.connectionNames())
+        name = QSqlDatabase.databaseName(db)
+        print("database name =", name)
         #print("time_start=", dt.datetime.now())
         self.te_infosBase.append("\nArchivage fini...\n")
         self.btn_splitBase.setEnabled(False)
@@ -208,11 +214,15 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
             print("base_name=", basename)
             Database.change_current_database_in_base(self, basename)
             # ferme les connexions à la base
-            print("Old Connection_name=", QSqlDatabase.database())
-            QSqlDatabase.database().close()
+            #print("Old Connection_name=", QSqlDatabase.database())
+            #QSqlDatabase.database().close()
             os.rename(name, "./database/" + basename)
 
-            #
+            QSqlDatabase.close(db)
+            db = QSqlDatabase.addDatabase("QSQLITE", "con_base_cur")
+            db.setDatabaseName("./database/" + basename)
+            self.gb_baseCourante.setTitle(basename)
+            self.btn_infosBase_clicked()
 
         print("baseDialog.btn_splitBase_clicked OUT")
 

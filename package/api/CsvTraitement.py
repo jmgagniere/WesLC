@@ -7,12 +7,15 @@ from package.api.database import Database
 
 class CsvTraitement:
     def __init__(self, dateImport):
+        print("CsvTraitement.__init__")
         self.dateImport = dateImport
 
         print("dateImport=", self.dateImport)
         self.readCsvFiles()
+        print("CsvTraitement.__init__ OUT")
 
     def readCsvFiles(self):
+        print("CsvTraitement.readCsvFiles")
         date = self.dateImport[5:10]
         #path_base = "ftp_temp" + '/'
 
@@ -249,6 +252,8 @@ class CsvTraitement:
 
         for f in listdir:
             os.remove(f"./ftp_temp/{f}")
+
+        print("CsvTraitement.readCsvFiles OUT")
 
 
 

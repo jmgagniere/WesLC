@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from functools import partial
 
 from PySide6.QtSql import QSqlDatabase
@@ -21,19 +21,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.setupUi(self)
         self.setWindowTitle("WES - LC")
-        # 1ere connection et ouverture de la base
-        self.db = Database()
+        # 1ere connection et ouverture de la base contenant les configurations
+        db = Database()
+        print("first con=", QSqlDatabase.connectionNames())
         # lecture de la base courante en baseWes.db
         base = Database.get_current_base_name_in_base(self)
         path_base_to_load = f"database/{base}"
-        print("Old Connection_name=", QSqlDatabase.database())
         QSqlDatabase.database().close()
+        # test si base existe
+        if os.path.exists(path_base_to_load):
+            print("The file of base exists.")
+            self.f_base_vide = False
+            db = QSqlDatabase.addDatabase("QSQLITE", "con_base_cur")
+            db.setDatabaseName(path_base_to_load)
+            db.open()
+        else:
+            print("base vide")
+            self.f_base_vide = True
+            Database.initialise_baseWes(self)
+
+
+        print(" con=", QSqlDatabase.connectionNames())
+
+        #QSqlDatabase.database().close()
         # ouverture nouvelle base current
-        db = QSqlDatabase.addDatabase("QSQLITE")
+        """db = QSqlDatabase.addDatabase("QSQLITE", "con_base_cur")
         db.setDatabaseName(path_base_to_load)
         db.open()
-        Database.is_instantiated = True
-        print("New Connection_name=", QSqlDatabase.database())
+        #Database.is_instantiated = True
+        print("New Connection_name=", QSqlDatabase.connectionNames())"""
+
         self.setWindowTitle(f"WES - LC    {base}")
         self.flag_firstPlot = True
         self.flag_fin_ajout_data_in_base = False
@@ -104,7 +121,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # récupération des parametres graphe en base
         plot_param = Database.get_plot_param(self)
-        #print("plot_param=",plot_param)
+        print("plot_param=",plot_param)
 
         for i, blo in enumerate(plot_param):
             #      Id       name    color   cb etat width
@@ -413,7 +430,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def get_date_last_record(self):
         # Mise à jour des LineEdit à la date du dernier enregistrement en base
         print("main.get_date_last_record")
-        datedeb = Database.get_lastRecordDate(self)
+        if self.f_base_vide:
+            datedeb = "1900-01-01 00:00"
+
+        else:
+            datedeb = Database.get_lastRecordDate(self)
         print(datedeb)
         self.deb_dateTime = QtCore.QDateTime.fromString(datedeb, "yyyy-MM-dd")
         datefin = self.deb_dateTime.toString("yyyy-MM-dd")

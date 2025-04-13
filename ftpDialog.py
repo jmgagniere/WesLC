@@ -34,7 +34,7 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
         #self.lab_date.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.le_passwd.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
         #self.te_infos_transfer.setMinimumHeight(300)
-        #self.date_import.setCalendarPopup(True)
+        self.date_import.setCalendarPopup(True)
         self.btn_ajout_base.setEnabled(True)
         print("ftpDialog.modify_widget OUT")
 
@@ -95,8 +95,12 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
         print("ftpDialog.btn_test_clicked")
         self.te_infos_transfer.append("Bouton Ajout Base Enabled")
         self.btn_ajout_base.setEnabled(True)
+        host = self.le_host.text()
+        login = self.le_login.text()
+        passwd = self.le_passwd.text()
+
         try:
-            ftp = ftplib.FTP(self.host, self.login, self.passwd)
+            ftp = ftplib.FTP(host, login, passwd)
             etat = ftp.getwelcome()
             self.te_infos_transfer.append(etat)
             self.te_infos_transfer.append('Test OK !')
@@ -116,9 +120,13 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
         date = self.dateImport_str[5:10]
         print('an=', an, 'date=', date)
 
+        host = self.le_host.text()
+        login = self.le_login.text()
+        passwd = self.le_passwd.text()
+
         # Connexion (à try except)
         try:
-            ftp = ftplib.FTP(self.host, self.login, self.passwd)
+            ftp = ftplib.FTP(host, login, passwd)
         except ftplib.all_errors as e:
             self.te_infos_transfer.append("Erreursize:" + str(e))
             QtWidgets.QApplication.processEvents()
