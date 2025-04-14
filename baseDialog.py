@@ -211,9 +211,6 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.btn_splitBase.setEnabled(False)
         self.cb_autoriseSplit.setChecked(False)
 
-        """with tarfile.open(name + '.bz', "w:bz2") as tar:
-            tar.add(name, name)"""
-
         with open(name, 'rb') as f1:
             data = f1.read()
         f = bz2.open(name + '.bz2', "wb")
