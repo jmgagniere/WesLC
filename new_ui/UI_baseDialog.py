@@ -35,6 +35,8 @@ class Ui_Dialog(object):
         self.gb_baseCourante = QGroupBox(Dialog)
         self.gb_baseCourante.setObjectName(u"gb_baseCourante")
         self.gb_baseCourante.setGeometry(QRect(790, 12, 364, 411))
+        sizePolicy.setHeightForWidth(self.gb_baseCourante.sizePolicy().hasHeightForWidth())
+        self.gb_baseCourante.setSizePolicy(sizePolicy)
         self.gb_baseCourante.setFlat(False)
         self.layoutWidget = QWidget(self.gb_baseCourante)
         self.layoutWidget.setObjectName(u"layoutWidget")
@@ -77,6 +79,8 @@ class Ui_Dialog(object):
         self.gb_splitBase = QGroupBox(Dialog)
         self.gb_splitBase.setObjectName(u"gb_splitBase")
         self.gb_splitBase.setGeometry(QRect(24, 18, 744, 411))
+        sizePolicy.setHeightForWidth(self.gb_splitBase.sizePolicy().hasHeightForWidth())
+        self.gb_splitBase.setSizePolicy(sizePolicy)
         self.gb_splitBase.setMinimumSize(QSize(350, 120))
         self.gb_splitBase.setFlat(False)
         self.layoutWidget_2 = QWidget(self.gb_splitBase)
@@ -145,6 +149,11 @@ class Ui_Dialog(object):
         self.rb_garde_avant_date_split = QRadioButton(self.gb_splitBase)
         self.rb_garde_avant_date_split.setObjectName(u"rb_garde_avant_date_split")
         self.rb_garde_avant_date_split.setGeometry(QRect(400, 66, 165, 20))
+        self.btn_kill_base = QPushButton(self.gb_splitBase)
+        self.btn_kill_base.setObjectName(u"btn_kill_base")
+        self.btn_kill_base.setGeometry(QRect(176, 132, 101, 32))
+        sizePolicy.setHeightForWidth(self.btn_kill_base.sizePolicy().hasHeightForWidth())
+        self.btn_kill_base.setSizePolicy(sizePolicy)
 
         self.retranslateUi(Dialog)
 
@@ -166,5 +175,6 @@ class Ui_Dialog(object):
         self.btn_loadBase.setText(QCoreApplication.translate("Dialog", u"Charge autre base", None))
         self.rb_garde_apres_date_split.setText(QCoreApplication.translate("Dialog", u"Garde apr\u00e8s Date Split", None))
         self.rb_garde_avant_date_split.setText(QCoreApplication.translate("Dialog", u"Garde avant Date Split", None))
+        self.btn_kill_base.setText(QCoreApplication.translate("Dialog", u"Supprime", None))
     # retranslateUi
 

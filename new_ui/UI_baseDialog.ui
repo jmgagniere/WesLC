@@ -40,6 +40,12 @@
      <height>411</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="title">
     <string>Base Courante</string>
    </property>
@@ -143,6 +149,12 @@
      <width>744</width>
      <height>411</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
    <property name="minimumSize">
     <size>
@@ -298,6 +310,25 @@
     </property>
     <property name="text">
      <string>Garde avant Date Split</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_kill_base">
+    <property name="geometry">
+     <rect>
+      <x>176</x>
+      <y>132</y>
+      <width>101</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="text">
+     <string>Supprime</string>
     </property>
    </widget>
   </widget>

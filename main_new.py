@@ -331,7 +331,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         db = QSqlDatabase.database("conn_base", True)
         name = QSqlDatabase.databaseName(db).split("/")[-1:][0]
-        deb, fin = Database.base_periode(self)
+        deb, fin = Database.base_periode(self, True)
 
 
         self.label1.setText("base: {}".format(name))
@@ -399,12 +399,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def btn_ftp_clicked(self):
-        print("btn_ftp clicked")
+        print("main.btn_ftp clicked")
         ftpDialog = FtpDialog()
         result = ftpDialog.exec()
         if result == QtWidgets.QDialog.DialogCode.Accepted:
             print("OKOK")
             self.flag_fin_ajout_data_in_base = True
+        self.update_statusBar()
+        print("main.btn_ftp clicked OUT")
+
 
     def btn_plot_clicked(self):
         print("main.btn_plot_clicked")
