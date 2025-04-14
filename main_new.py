@@ -2,7 +2,7 @@ import sys, os
 from functools import partial
 
 from PySide6.QtSql import QSqlDatabase
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from new_ui.UI_mainWindow import Ui_MainWindow
 from PySide6 import QtCore, QtWidgets
 from pyqtgraph import PlotWidget
@@ -23,16 +23,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle("WES - LC")
         # 1ere connection et ouverture de la base contenant les configurations
         db = Database()
-        print("first con=", QSqlDatabase.connectionNames())
-        # lecture de la base courante en baseWes.db
+
+        # lecture de la base courante en '.baseWes_ini.db'
         base = Database.get_current_base_name_in_base(self)
         path_base_to_load = f"database/{base}"
-        QSqlDatabase.database().close()
+        ##QSqlDatabase.database().close()
         # test si base existe
         if os.path.exists(path_base_to_load):
             print("The file of base exists.")
             self.f_base_vide = False
-            db = QSqlDatabase.addDatabase("QSQLITE", "con_base_cur")
+            db = QSqlDatabase.addDatabase("QSQLITE", "conn_base")
             db.setDatabaseName(path_base_to_load)
             db.open()
         else:
@@ -40,21 +40,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.f_base_vide = True
             Database.initialise_baseWes(self)
 
-
-        print(" con=", QSqlDatabase.connectionNames())
-
-        #QSqlDatabase.database().close()
-        # ouverture nouvelle base current
-        """db = QSqlDatabase.addDatabase("QSQLITE", "con_base_cur")
-        db.setDatabaseName(path_base_to_load)
-        db.open()
-        #Database.is_instantiated = True
-        print("New Connection_name=", QSqlDatabase.connectionNames())"""
-
         self.setWindowTitle(f"WES - LC    {base}")
         self.flag_firstPlot = True
         self.flag_fin_ajout_data_in_base = False
-
 
         self.init_widget()
         self.setup_connections()
@@ -114,6 +102,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionQuit.triggered.connect(self.close)
         self.actionConfig_Legende.triggered.connect(self.btn_config_clicked)
         self.actionactionBase.triggered.connect(self.actionBase_triggered)
+
         print("main.setup_connections OUT")
 
     def init_plot(self):
@@ -395,9 +384,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def btn_plot_clicked(self):
         print("main.btn_plot_clicked")
-        dbx = QSqlDatabase.database()
-        name = QSqlDatabase.databaseName(dbx)
-        win.setWindowTitle(name[9:])
         self.plot()
         print("main.btn_plot_clicked OUT")
 
@@ -408,6 +394,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         result = baseDialog.exec()
         if result == QtWidgets.QDialog.DialogCode.Accepted:
             print("okok")
+        name = Database.get_current_base_name_in_base(self).split("/")[-1:][0]
+        self.setWindowTitle(name)
+        self.get_date_last_record()
         print("main.actionBase triggered OUT")
 
 

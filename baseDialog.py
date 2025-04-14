@@ -24,11 +24,11 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
     def init_widgets(self):
         print("baseDialog.init_widgets")
         # change le nom de la base dans le groupBox
-        db = QSqlDatabase.database("con_base_cur", True)
-        print("connection names = ", QSqlDatabase.connectionNames())
-        name = QSqlDatabase.databaseName(db)
+        db = QSqlDatabase.database("conn_base", True)
+        ##print("connection names = ", QSqlDatabase.connectionNames())
+        name = QSqlDatabase.databaseName(db).split("/")[-1:][0]
         print("database name =", name)
-        self.gb_baseCourante.setTitle(name[9:])
+        self.gb_baseCourante.setTitle(name)
         self.dt_splitRecord.setCalendarPopup(True)
         self.dt_firstRecord.setCalendarPopup(True)
         self.dt_lastRecord.setCalendarPopup(True)
@@ -38,15 +38,7 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.get_list_of_existing_base()
         self.rb_garde_apres_date_split.setChecked(True)
 
-        date = Database.get_lastRecordDate(self)[0:10]
-        self.deb_last_record_date = QtCore.QDate.fromString(date, ("yyyy-MM-dd"))
-        self.dt_lastRecord.setDate(self.deb_last_record_date)
-        self.dt_splitRecord.setDate(self.deb_last_record_date)
-        date = Database.get_firstRecordDate(self)[0:10]
-        self.firstRecord_date = QtCore.QDate.fromString(date, ("yyyy-MM-dd"))
-        self.dt_firstRecord.setDate(self.firstRecord_date)
-        print("baseDialog.init_widgets OUT")
-
+        self.update_split_gb()
 
     def setup_connections(self):
         print("baseDialog.setup_connections")
@@ -61,15 +53,24 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.rb_garde_avant_date_split.toggled.connect(lambda: self.rb_garde_toggled(self.rb_garde_avant_date_split))
         print("baseDialog.setup_connections OUT")
 
+    def update_split_gb(self):
+        print("baseDialog.update_split_gb")
+        date_deb, date_fin = Database.base_periode(self)
+        print("date1er=", date_deb, " date_last=", date_fin)
+        last_record_date = QtCore.QDate.fromString(date_fin, ("yyyy-MM-dd"))
+        self.dt_lastRecord.setDate(last_record_date)
+        self.dt_splitRecord.setDate(last_record_date)
+        first_record_date = QtCore.QDate.fromString(date_deb, ("yyyy-MM-dd"))
+        self.dt_firstRecord.setDate(first_record_date)
+        print("baseDialog.update_split_gb OUT")
+
     def btn_infosBase_clicked(self):
         print("baseDialog.btn_infosBase_clicked")
-        db = QSqlDatabase.database("con_base_cur", True)
+        db = QSqlDatabase.database("conn_base", True)
         print("connection names = ", QSqlDatabase.connectionNames())
         name = QSqlDatabase.databaseName(db)
         print("database name =", name)
-        #flag = db.open()
-        #print("flag=", flag)
-        #print("name=",name)
+
         taille = os.path.getsize(name)
         nbr_row = Database.get_nbr_records(self)
         nbr_jour = nbr_row / 1440
@@ -88,7 +89,7 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
     def btn_optimiseBase_clicked(self):
         print("baseDialog.btn_optimiseBase_clicked")
         Database.base_optimise(self)
-        db = QSqlDatabase.database("con_base_cur", True)
+        db = QSqlDatabase.database("conn_base", True)
         print("connection names = ", QSqlDatabase.connectionNames())
         name = QSqlDatabase.databaseName(db)
 
@@ -124,14 +125,16 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         #QSqlDatabase.database().close()
 
         # ouverture nouvelle base current
-        db = QSqlDatabase.database("con_base_cur", True)
+        db = QSqlDatabase.database("conn_base", True)
         db.setDatabaseName(path_base_to_load)
         flag = db.open()
         print("flagncbaseopen=",flag)
 
-        self.gb_baseCourante.setTitle(path_base_to_load[9:])
+        self.gb_baseCourante.setTitle(path_base_to_load[9:]) ###
         self.te_infosBase.clear()
+        self.update_split_gb()
         self.btn_infosBase_clicked()
+
 
         print("baseDialog.btn_loadBase_clicked OUT")
         #win.setWindowTitle(f"WES - LC base:{self.new_base_to_load}")
@@ -181,14 +184,13 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         on jette  la partie plus ancienne"""
 
         print("baseDialog.btn_splitBase_clicked")
-        self.te_infosBase.append("\nArchivage en cours...\n")
+        self.te_infosBase.append("\nArchivage en cours...")
         # Compression de la base pour une sauvegarde avant destruction des records
-        ## recupère nom de la base
-        db = QSqlDatabase.database("con_base_cur", True)
-        print("connection names = ", QSqlDatabase.connectionNames())
+        ## recupère nom de la base qui va être splitter
+        db = QSqlDatabase.database("conn_base", True)
+        ##print("connection names = ", QSqlDatabase.connectionNames())
         name = QSqlDatabase.databaseName(db)
-        print("database name =", name)
-        #print("time_start=", dt.datetime.now())
+        ##print("database name =", name)
         self.te_infosBase.append("\nArchivage fini...\n")
         self.btn_splitBase.setEnabled(False)
         self.cb_autoriseSplit.setChecked(False)
@@ -204,25 +206,26 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
 
         # récupere la date du split
         dt_split = self.dt_splitRecord.dateTime()
-        #date = QtCore.QDateTime.toString(dt_split, "yyyy-MM-dd")
-        print("dt_split=",dt_split)
+        ##print("dt_split=",dt_split)
         Database.split_base(self, dt_split, save_after)
 
         basename, ok = QInputDialog.getText(self,"Nouveau nom :",
                                             "Nouveau nom pour la base:", QLineEdit.Normal)
         if ok and basename:
             print("base_name=", basename)
+            if basename[-3:] != ".db":
+                basename = basename + ".db"
             Database.change_current_database_in_base(self, basename)
-            # ferme les connexions à la base
-            #print("Old Connection_name=", QSqlDatabase.database())
-            #QSqlDatabase.database().close()
             os.rename(name, "./database/" + basename)
 
             QSqlDatabase.close(db)
-            db = QSqlDatabase.addDatabase("QSQLITE", "con_base_cur")
+            # Ouverture connection à la nouvelle base
+            db = QSqlDatabase.addDatabase("QSQLITE", "conn_base")
             db.setDatabaseName("./database/" + basename)
+            # Mise à jour des widgets
             self.gb_baseCourante.setTitle(basename)
             self.btn_infosBase_clicked()
+            self.update_split_gb()
 
         print("baseDialog.btn_splitBase_clicked OUT")
 
