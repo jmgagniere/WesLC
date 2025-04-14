@@ -196,7 +196,7 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.cb_autoriseSplit.setChecked(False)
 
         with tarfile.open(name + '.bz', "w:bz2") as tar:
-            tar.add(name, 'baseWes_full.db')
+            tar.add(name, name)
 
         # determine si on garde les enregistrements avant ou après date de split
         if self.rb_garde_apres_date_split.isChecked():

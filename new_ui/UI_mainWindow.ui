@@ -740,6 +740,7 @@
    <addaction name="actionConfig_Legende"/>
    <addaction name="actionactionBase"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>

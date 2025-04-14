@@ -2,7 +2,7 @@ import sys, os
 from functools import partial
 
 from PySide6.QtSql import QSqlDatabase
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QLabel
 from new_ui.UI_mainWindow import Ui_MainWindow
 from PySide6 import QtCore, QtWidgets
 from pyqtgraph import PlotWidget
@@ -87,6 +87,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.p1.setMinimumSize(QtCore.QSize(1000, 400))
         self.main_gridLayout.addWidget(self.p1, 1, 0, -1, -1)
+
+        # StatusBar
+        self.label1 = QLabel()
+        self.label2 = QLabel()
+        self.label1.setIndent(3)
+        self.statusBar.addWidget(self.label1)
+        self.statusBar.addPermanentWidget(self.label2)
+        self.update_statusBar()
+
+
+
         print("main.init_widget OUT")
 
     def setup_connections(self):
@@ -315,6 +326,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         p2.linkedViewChanged(p1.getViewBox(), p2.XAxis)
         print("main.updateViews OUT")
 
+    def update_statusBar(self):
+        print("main.update_statusBar")
+
+        db = QSqlDatabase.database("conn_base", True)
+        name = QSqlDatabase.databaseName(db).split("/")[-1:][0]
+        deb, fin = Database.base_periode(self)
+
+
+        self.label1.setText("base: {}".format(name))
+        self.statusBar.addPermanentWidget(self.label2)
+        self.label2.setText("Période du: {},     au: {} ".format(deb, fin))
+        print("main.update_statusBar OUT")
+
     def checkBox_changed(self, id, state):
         print(f"checkBox {id} state changed to {state}")
         if id == "base":
@@ -397,6 +421,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         name = Database.get_current_base_name_in_base(self).split("/")[-1:][0]
         self.setWindowTitle(name)
         self.get_date_last_record()
+        self.update_statusBar()
         print("main.actionBase triggered OUT")
 
 
