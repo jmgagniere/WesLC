@@ -1,9 +1,9 @@
 #import datetime from datetime
-import os, glob, time, sys, tarfile
+import os, glob, time, sys, tarfile, bz2
 import datetime as dt
 
 from PySide6 import QtWidgets, QtCore
-from PySide6.QtWidgets import QFileSystemModel, QInputDialog, QLineEdit
+from PySide6.QtWidgets import QFileSystemModel, QInputDialog, QLineEdit, QMessageBox
 from PySide6.QtCore import QDir, Qt
 from PySide6.QtSql import QSqlDatabase
 
@@ -51,11 +51,12 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.tree_view.clicked.connect(self.tree_view_clicked)
         self.rb_garde_apres_date_split.toggled.connect(lambda :self.rb_garde_toggled(self.rb_garde_apres_date_split))
         self.rb_garde_avant_date_split.toggled.connect(lambda: self.rb_garde_toggled(self.rb_garde_avant_date_split))
+        self.btn_kill_base.clicked.connect(self.btn_kill_base_clicked)
         print("baseDialog.setup_connections OUT")
 
     def update_split_gb(self):
         print("baseDialog.update_split_gb")
-        date_deb, date_fin = Database.base_periode(self)
+        date_deb, date_fin = Database.base_periode(self, False)
         print("date1er=", date_deb, " date_last=", date_fin)
         last_record_date = QtCore.QDate.fromString(date_fin, ("yyyy-MM-dd"))
         self.dt_lastRecord.setDate(last_record_date)
@@ -107,18 +108,18 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         # print item from first column
         #index = self.tree_view.selectedIndexes()[0]
         index = self.tree_view.currentIndex()
-        self.new_base_to_load = self.tree_view.model().data(index)
-        #print("item",self.new_base_to_load)
+        self.selected_file = self.tree_view.model().data(index)
+        #print("item",self.selected_file)
         self.btn_loadBase.setEnabled(True)
         print("baseDialog.tree_view_clicked OUT")
 
 
     def btn_loadBase_clicked(self):
         print("baseDialog.btn_loadBase_clicked")
-        print("new_base_to_load=", self.new_base_to_load)
+        print("selected_file=", self.selected_file)
         # écrit nouvelle base courante en base
-        Database.change_current_database_in_base(self, self.new_base_to_load)
-        path_base_to_load = f"database/{self.new_base_to_load}"
+        Database.change_current_database_in_base(self, self.selected_file)
+        path_base_to_load = f"database/{self.selected_file}"
         # cloture ancienne base
         #Database.close(self)
         #print("Old Connection_name=", QSqlDatabase.database())
@@ -134,10 +135,25 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.te_infosBase.clear()
         self.update_split_gb()
         self.btn_infosBase_clicked()
-
-
         print("baseDialog.btn_loadBase_clicked OUT")
-        #win.setWindowTitle(f"WES - LC base:{self.new_base_to_load}")
+
+    def btn_kill_base_clicked(self):
+        print("baseDialog.btn_kill_base_clicked")
+        # Vérif fichier n'est pas la base courante
+        f_to_kill = self.selected_file
+        cur_base = Database.get_current_base_name_in_base(self)
+        print("cur_base=",cur_base, "selected_file=",self.selected_file)
+        if cur_base != self.selected_file:
+            bt = QMessageBox.question(self,"ATTENTION !",
+                                                "Etes-vous sûr de bien vouloir détruire cette base?",
+                                                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                                                defaultButton=QMessageBox.StandardButton.No)
+            if bt == QMessageBox.StandardButton.Yes:
+                os.remove("./database/" + self.selected_file)
+
+        self.get_list_of_existing_base()
+
+        print("baseDialog.btn_kill_base_clicked OUT")
 
     def rb_garde_toggled(self,rbtn):
         print("rb_garde_toggled")
@@ -195,8 +211,14 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.btn_splitBase.setEnabled(False)
         self.cb_autoriseSplit.setChecked(False)
 
-        with tarfile.open(name + '.bz', "w:bz2") as tar:
-            tar.add(name, name)
+        """with tarfile.open(name + '.bz', "w:bz2") as tar:
+            tar.add(name, name)"""
+
+        with open(name, 'rb') as f1:
+            data = f1.read()
+        f = bz2.open(name + '.bz2', "wb")
+        f.write(data)
+        f.close()
 
         # determine si on garde les enregistrements avant ou après date de split
         if self.rb_garde_apres_date_split.isChecked():

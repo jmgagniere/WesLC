@@ -323,9 +323,9 @@ class Database(QSqlDatabase):
         print("database.get_nbr_records OUT")
         return nb_record
 
-    def base_periode(self):
+    def base_periode(self, f_full = False):
         """Pour obtenir les dates du 1er et dernier enregistrement en base"""
-        print("database.base_periode")
+        print("database.base_periode type= ",f_full)
         db = QSqlDatabase.database("conn_base", True)
         print("connection names = ", QSqlDatabase.connectionNames())
         name = QSqlDatabase.databaseName(db)
@@ -335,25 +335,23 @@ class Database(QSqlDatabase):
         query_str = """SELECT Time FROM weslc_new ORDER by Time DESC LIMIT 1"""
         query.exec(query_str)
         while query.next():
-            date = query.value(0)
-            print("datefin=", date)
-        try:
-            last = date[0:10]
-        except:
-            pass
+            last = query.value(0)
+            print("datefin=", last)
+
 
         query_str = """SELECT Time FROM weslc_new ORDER by Time ASC LIMIT 1"""
         query.exec(query_str)
         while query.next():
-            date = query.value(0)
-            print("datedeb=",date)
-        try:
-            deb = date[0:10]
-        except:
-            pass
+            deb = query.value(0)
+            print("datedeb=",deb)
+
 
         print("database.base_periode OUT")
         try:
+            if not f_full:
+                deb = deb[0:10]
+                last = last[0:10]
+            print("periode du ",deb, "au ",last)
             return (deb, last)
         except: UnboundLocalError
         QMessageBox.critical(
