@@ -44,7 +44,7 @@
          <property name="geometry">
           <rect>
            <x>217</x>
-           <y>26</y>
+           <y>24</y>
            <width>62</width>
            <height>20</height>
           </rect>
@@ -57,7 +57,7 @@
          <property name="geometry">
           <rect>
            <x>346</x>
-           <y>92</y>
+           <y>76</y>
            <width>40</width>
            <height>20</height>
           </rect>
@@ -69,10 +69,10 @@
         <widget class="QLineEdit" name="le_val_ph3">
          <property name="geometry">
           <rect>
-           <x>670</x>
-           <y>110</y>
-           <width>66</width>
-           <height>21</height>
+           <x>656</x>
+           <y>96</y>
+           <width>80</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="readOnly">
@@ -82,10 +82,10 @@
         <widget class="QLineEdit" name="le_val_1w1">
          <property name="geometry">
           <rect>
-           <x>27</x>
-           <y>44</y>
-           <width>66</width>
-           <height>21</height>
+           <x>12</x>
+           <y>42</y>
+           <width>80</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="readOnly">
@@ -95,10 +95,10 @@
         <widget class="QLineEdit" name="le_val_pa">
          <property name="geometry">
           <rect>
-           <x>362</x>
-           <y>110</y>
-           <width>65</width>
-           <height>21</height>
+           <x>348</x>
+           <y>96</y>
+           <width>80</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="readOnly">
@@ -109,7 +109,7 @@
          <property name="geometry">
           <rect>
            <x>448</x>
-           <y>92</y>
+           <y>76</y>
            <width>47</width>
            <height>20</height>
           </rect>
@@ -122,7 +122,7 @@
          <property name="geometry">
           <rect>
            <x>114</x>
-           <y>92</y>
+           <y>76</y>
            <width>55</width>
            <height>20</height>
           </rect>
@@ -135,7 +135,7 @@
          <property name="geometry">
           <rect>
            <x>582</x>
-           <y>44</y>
+           <y>40</y>
            <width>149</width>
            <height>21</height>
           </rect>
@@ -147,10 +147,10 @@
         <widget class="QLineEdit" name="le_pulse1">
          <property name="geometry">
           <rect>
-           <x>12</x>
-           <y>110</y>
-           <width>14</width>
-           <height>20</height>
+           <x>13</x>
+           <y>92</y>
+           <width>80</width>
+           <height>5</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -161,8 +161,8 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>14</width>
-           <height>20</height>
+           <width>80</width>
+           <height>5</height>
           </size>
          </property>
          <property name="readOnly">
@@ -172,10 +172,10 @@
         <widget class="QLineEdit" name="le_val_ph1">
          <property name="geometry">
           <rect>
-           <x>464</x>
-           <y>110</y>
-           <width>66</width>
-           <height>21</height>
+           <x>450</x>
+           <y>96</y>
+           <width>80</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="readOnly">
@@ -185,10 +185,10 @@
         <widget class="QLineEdit" name="le_val_ph2">
          <property name="geometry">
           <rect>
-           <x>567</x>
-           <y>110</y>
-           <width>66</width>
-           <height>21</height>
+           <x>553</x>
+           <y>96</y>
+           <width>80</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="readOnly">
@@ -199,7 +199,7 @@
          <property name="geometry">
           <rect>
            <x>654</x>
-           <y>92</y>
+           <y>76</y>
            <width>49</width>
            <height>20</height>
           </rect>
@@ -212,7 +212,7 @@
          <property name="geometry">
           <rect>
            <x>551</x>
-           <y>92</y>
+           <y>76</y>
            <width>49</width>
            <height>20</height>
           </rect>
@@ -225,7 +225,7 @@
          <property name="geometry">
           <rect>
            <x>552</x>
-           <y>48</y>
+           <y>44</y>
            <width>25</width>
            <height>16</height>
           </rect>
@@ -241,7 +241,7 @@
          <property name="geometry">
           <rect>
            <x>11</x>
-           <y>92</y>
+           <y>76</y>
            <width>58</width>
            <height>20</height>
           </rect>
@@ -253,10 +253,10 @@
         <widget class="QLineEdit" name="le_val_1w3">
          <property name="geometry">
           <rect>
-           <x>233</x>
-           <y>44</y>
-           <width>66</width>
-           <height>21</height>
+           <x>218</x>
+           <y>42</y>
+           <width>80</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="text">
@@ -269,10 +269,10 @@
         <widget class="QLineEdit" name="le_val_pulse1">
          <property name="geometry">
           <rect>
-           <x>27</x>
-           <y>110</y>
-           <width>66</width>
-           <height>21</height>
+           <x>13</x>
+           <y>96</y>
+           <width>80</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="readOnly">
@@ -282,10 +282,10 @@
         <widget class="QLineEdit" name="le_pince1">
          <property name="geometry">
           <rect>
-           <x>115</x>
-           <y>110</y>
-           <width>14</width>
-           <height>20</height>
+           <x>116</x>
+           <y>92</y>
+           <width>80</width>
+           <height>5</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -296,8 +296,8 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>14</width>
-           <height>20</height>
+           <width>80</width>
+           <height>5</height>
           </size>
          </property>
          <property name="readOnly">
@@ -307,10 +307,10 @@
         <widget class="QLineEdit" name="le_ph1">
          <property name="geometry">
           <rect>
-           <x>449</x>
-           <y>110</y>
-           <width>14</width>
-           <height>20</height>
+           <x>450</x>
+           <y>92</y>
+           <width>80</width>
+           <height>5</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -321,8 +321,8 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>14</width>
-           <height>20</height>
+           <width>80</width>
+           <height>5</height>
           </size>
          </property>
          <property name="readOnly">
@@ -333,9 +333,9 @@
          <property name="geometry">
           <rect>
            <x>115</x>
-           <y>44</y>
-           <width>14</width>
-           <height>20</height>
+           <y>40</y>
+           <width>80</width>
+           <height>5</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -346,8 +346,8 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>14</width>
-           <height>20</height>
+           <width>80</width>
+           <height>5</height>
           </size>
          </property>
          <property name="readOnly">
@@ -357,10 +357,10 @@
         <widget class="QLineEdit" name="le_val_1w2">
          <property name="geometry">
           <rect>
-           <x>130</x>
-           <y>44</y>
-           <width>66</width>
-           <height>21</height>
+           <x>115</x>
+           <y>43</y>
+           <width>80</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="readOnly">
@@ -371,9 +371,9 @@
          <property name="geometry">
           <rect>
            <x>218</x>
-           <y>44</y>
-           <width>14</width>
-           <height>20</height>
+           <y>40</y>
+           <width>80</width>
+           <height>5</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -384,8 +384,8 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>14</width>
-           <height>20</height>
+           <width>80</width>
+           <height>5</height>
           </size>
          </property>
          <property name="readOnly">
@@ -396,9 +396,9 @@
          <property name="geometry">
           <rect>
            <x>12</x>
-           <y>44</y>
-           <width>14</width>
-           <height>20</height>
+           <y>40</y>
+           <width>80</width>
+           <height>5</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -409,8 +409,8 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>14</width>
-           <height>20</height>
+           <width>80</width>
+           <height>5</height>
           </size>
          </property>
          <property name="readOnly">
@@ -420,10 +420,10 @@
         <widget class="QLineEdit" name="le_ph3">
          <property name="geometry">
           <rect>
-           <x>655</x>
-           <y>110</y>
-           <width>14</width>
-           <height>20</height>
+           <x>656</x>
+           <y>92</y>
+           <width>80</width>
+           <height>5</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -434,8 +434,8 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>14</width>
-           <height>20</height>
+           <width>80</width>
+           <height>5</height>
           </size>
          </property>
          <property name="readOnly">
@@ -445,10 +445,10 @@
         <widget class="QLineEdit" name="le_pince2">
          <property name="geometry">
           <rect>
-           <x>218</x>
-           <y>110</y>
-           <width>14</width>
-           <height>20</height>
+           <x>219</x>
+           <y>92</y>
+           <width>80</width>
+           <height>5</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -459,8 +459,8 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>14</width>
-           <height>20</height>
+           <width>80</width>
+           <height>5</height>
           </size>
          </property>
          <property name="readOnly">
@@ -470,10 +470,10 @@
         <widget class="QLineEdit" name="le_val_pince1">
          <property name="geometry">
           <rect>
-           <x>130</x>
-           <y>110</y>
-           <width>66</width>
-           <height>21</height>
+           <x>116</x>
+           <y>96</y>
+           <width>80</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="readOnly">
@@ -484,7 +484,7 @@
          <property name="geometry">
           <rect>
            <x>217</x>
-           <y>92</y>
+           <y>76</y>
            <width>51</width>
            <height>20</height>
           </rect>
@@ -496,10 +496,10 @@
         <widget class="QLineEdit" name="le_ph2">
          <property name="geometry">
           <rect>
-           <x>552</x>
-           <y>110</y>
-           <width>14</width>
-           <height>20</height>
+           <x>553</x>
+           <y>92</y>
+           <width>80</width>
+           <height>5</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -510,8 +510,8 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>14</width>
-           <height>20</height>
+           <width>80</width>
+           <height>5</height>
           </size>
          </property>
          <property name="readOnly">
@@ -521,10 +521,10 @@
         <widget class="QLineEdit" name="le_val_pince2">
          <property name="geometry">
           <rect>
-           <x>233</x>
-           <y>110</y>
-           <width>66</width>
-           <height>21</height>
+           <x>219</x>
+           <y>96</y>
+           <width>80</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="readOnly">
@@ -535,7 +535,7 @@
          <property name="geometry">
           <rect>
            <x>346</x>
-           <y>44</y>
+           <y>40</y>
            <width>70</width>
            <height>20</height>
           </rect>
@@ -548,7 +548,7 @@
          <property name="geometry">
           <rect>
            <x>114</x>
-           <y>26</y>
+           <y>24</y>
            <width>69</width>
            <height>20</height>
           </rect>
@@ -560,10 +560,10 @@
         <widget class="QLineEdit" name="le_pa">
          <property name="geometry">
           <rect>
-           <x>346</x>
-           <y>110</y>
-           <width>14</width>
-           <height>20</height>
+           <x>347</x>
+           <y>92</y>
+           <width>80</width>
+           <height>5</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -574,8 +574,8 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>14</width>
-           <height>20</height>
+           <width>80</width>
+           <height>5</height>
           </size>
          </property>
          <property name="readOnly">
@@ -586,7 +586,7 @@
          <property name="geometry">
           <rect>
            <x>11</x>
-           <y>26</y>
+           <y>24</y>
            <width>73</width>
            <height>20</height>
           </rect>
