@@ -47,7 +47,7 @@
     </sizepolicy>
    </property>
    <property name="title">
-    <string>Base Courante</string>
+    <string>Base Courante:</string>
    </property>
    <property name="flat">
     <bool>false</bool>
@@ -58,13 +58,43 @@
       <x>-2</x>
       <y>32</y>
       <width>232</width>
-      <height>359</height>
+      <height>367</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <property name="leftMargin">
       <number>11</number>
      </property>
+     <item>
+      <widget class="QLabel" name="lab_base_courante">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>190</width>
+         <height>29</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>190</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QPushButton" name="btn_infosBase">
        <property name="sizePolicy">
@@ -257,8 +287,11 @@
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_3">
+      <property name="toolTip">
+       <string>date non incluse dans la suppression</string>
+      </property>
       <property name="text">
-       <string>Split avant:</string>
+       <string>Supprime &lt;:</string>
       </property>
      </widget>
     </item>
@@ -280,8 +313,11 @@
     </item>
     <item row="1" column="3">
      <widget class="QLabel" name="label_4">
+      <property name="toolTip">
+       <string>date non incluse dans la suppression</string>
+      </property>
       <property name="text">
-       <string>Split après</string>
+       <string>Supprime &gt;:</string>
       </property>
      </widget>
     </item>

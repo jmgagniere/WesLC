@@ -7,7 +7,7 @@ from package.api.database import Database
 
 class CsvTraitement:
     def __init__(self, dateImport):
-        print("CsvTraitement.__init__")
+        print("CsvTraitement.__init__  IN")
         self.dateImport = dateImport
 
         print("dateImport=", self.dateImport)
@@ -15,9 +15,8 @@ class CsvTraitement:
         print("CsvTraitement.__init__ OUT")
 
     def readCsvFiles(self):
-        print("CsvTraitement.readCsvFiles")
+        print("CsvTraitement.readCsvFiles  IN")
         date = self.dateImport[5:10]
-        #path_base = "ftp_temp" + '/'
 
         path_to_file_temp = f"ftp_temp/TP-{date}.csv"
         path_to_file_pulse = f"ftp_temp/PL-{date}.csv"
@@ -255,8 +254,6 @@ class CsvTraitement:
 
         print("CsvTraitement.readCsvFiles OUT")
 
-
-
     def convert_index_to_time_string(self,index):
         h, m = divmod(index, 60)
         str_h = str(h)
@@ -267,15 +264,3 @@ class CsvTraitement:
             str_m = "0" + str_m
         return str_h + ":" + str_m
 
-    def fill_trous(self, i, nb_trous):
-        print("fill_trous")
-        # Recherche de la position des trous
-        #list_trous = []
-
-        # Copie de la ligne avant le trou
-        return
-
-    def find_trous(self, a , b):
-        c = list(filter(lambda x: x not in b, a))
-        #print(c)
-        return c

@@ -1,5 +1,5 @@
-#import datetime from datetime
-import os, glob, time, sys, tarfile, bz2
+
+import os, glob, bz2
 import datetime as dt
 
 from PySide6 import QtWidgets, QtCore
@@ -13,7 +13,7 @@ from package.api.database import Database
 
 class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
     def __init__(self):
-        print("baseDialog.__init")
+        print("baseDialog.__init  IN")
         super().__init__()
         self.setupUi(self)
 
@@ -22,23 +22,24 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         print("baseDialog.__init OUT")
 
     def init_widgets(self):
-        print("baseDialog.init_widgets")
+        print("baseDialog.init_widgets  IN")
         # change le nom de la base dans le groupBox
         db = QSqlDatabase.database("conn_base", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
         name = QSqlDatabase.databaseName(db).split("/")[-1:][0]
         print("database name =", name)
-        self.gb_baseCourante.setTitle(name)
+        self.lab_base_courante.setText(name)
         self.dt_firstRecord.setCalendarPopup(True)
         self.dt_lastRecord.setCalendarPopup(True)
         self.btn_loadBase.setEnabled(False)
+        self.btn_kill_base.setEnabled(False)
 
         self.btn_infosBase_clicked()
         self.get_list_of_existing_base()
         self.update_split_gb()
 
     def setup_connections(self):
-        print("baseDialog.setup_connections")
+        print("baseDialog.setup_connections  IN")
         self.cb_autoriseSplit.stateChanged.connect(self.cb_autoriseSplit_stateChanged)
         self.btn_infosBase.clicked.connect(self.btn_infosBase_clicked)
         self.btn_optimiseBase.clicked.connect(self.btn_optimiseBase_clicked)
@@ -50,7 +51,7 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         print("baseDialog.setup_connections OUT")
 
     def update_split_gb(self):
-        print("baseDialog.update_split_gb")
+        print("baseDialog.update_split_gb IN")
         date_deb, date_fin = Database.base_periode(self, False)
         print("date1er=", date_deb, " date_last=", date_fin)
         last_record_date = QtCore.QDate.fromString(date_fin, ("yyyy-MM-dd"))
@@ -62,7 +63,7 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         print("baseDialog.update_split_gb OUT")
 
     def btn_infosBase_clicked(self):
-        print("baseDialog.btn_infosBase_clicked")
+        print("baseDialog.btn_infosBase_clicked  IN")
         db = QSqlDatabase.database("conn_base", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
         name = QSqlDatabase.databaseName(db)
@@ -79,12 +80,12 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         print("baseDialog.btn_infosBase_clicked OUT")
 
     def cb_autoriseSplit_stateChanged(self):
-        print("baseDialog.cb_autoriseSplit_stateChanged")
+        print("baseDialog.cb_autoriseSplit_stateChanged  IN")
         self.btn_splitBase.setEnabled(True)
         print("baseDialog.cb_autoriseSplit_stateChanged OUT")
 
     def btn_optimiseBase_clicked(self):
-        print("baseDialog.btn_optimiseBase_clicked")
+        print("baseDialog.btn_optimiseBase_clicked  IN")
         Database.base_optimise(self)
         db = QSqlDatabase.database("conn_base", True)
         print("connection names = ", QSqlDatabase.connectionNames())
@@ -95,23 +96,23 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         print("baseDialog.btn_optimiseBase_clicked OUT")
 
     def btn_base_OK_clicked(self):
-        print("baseDialog.btn_base_OK_clicked")
+        print("baseDialog.btn_base_OK_clicked  IN")
         self.done(QtWidgets.QDialog.DialogCode.Accepted)
         print("baseDialog.btn_base_OK_clicked OUT")
 
     def tree_view_clicked(self):
-        print("baseDialog.tree_view_clicked")
+        print("baseDialog.tree_view_clicked IN")
         # print item from first column
         index = self.tree_view.currentIndex().siblingAtColumn(0)
 
         self.selected_file = self.tree_view.model().data(index)
         print("item",self.selected_file)
         self.btn_loadBase.setEnabled(True)
+        self.btn_kill_base.setEnabled(True)
         print("baseDialog.tree_view_clicked OUT")
 
-
     def btn_loadBase_clicked(self):
-        print("baseDialog.btn_loadBase_clicked")
+        print("baseDialog.btn_loadBase_clicked IN")
         print("selected_file=", self.selected_file)
         # écrit nouvelle base courante en base
         Database.change_current_database_in_base(self, self.selected_file)
@@ -120,17 +121,17 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         # ouverture nouvelle base current
         db = QSqlDatabase.database("conn_base", True)
         db.setDatabaseName(path_base_to_load)
-        flag = db.open()
-        print("flagncbaseopen=",flag)
+        db.open()
 
-        self.gb_baseCourante.setTitle(path_base_to_load[9:]) ###
+        self.lab_base_courante.setText(path_base_to_load[9:])
         self.te_infosBase.clear()
         self.update_split_gb()
         self.btn_infosBase_clicked()
         print("baseDialog.btn_loadBase_clicked OUT")
 
     def btn_kill_base_clicked(self):
-        print("baseDialog.btn_kill_base_clicked")
+        print("baseDialog.btn_kill_base_clicked IN")
+        self.btn_kill_base.setEnabled(False)
         # Vérif fichier n'est pas la base courante
         f_to_kill = self.selected_file
         cur_base = Database.get_current_base_name_in_base(self)
@@ -142,18 +143,14 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
                                                 defaultButton=QMessageBox.StandardButton.No)
             if bt == QMessageBox.StandardButton.Yes:
                 os.remove("./database/" + self.selected_file)
+        else:
+            bt = QMessageBox.critical(self,"ATTENTION !", "La base courante ne peut pas être détruite")
 
         self.get_list_of_existing_base()
-
         print("baseDialog.btn_kill_base_clicked OUT")
 
-    def rb_garde_toggled(self,rbtn):
-        print("rb_garde_toggled")
-
-        print("rb_garde_toggled OUT")
-
     def get_list_of_existing_base(self):
-        print("baseDialog.get_list_of_existing_base")
+        print("baseDialog.get_list_of_existing_base  IN")
         path = "database/*.db"
 
         list_files = []
@@ -161,8 +158,6 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
             file_time = dt.datetime.fromtimestamp(os.path.getmtime(file))
             #print("file_time=", file_time.strftime("%d/%m/%Y, %H:%M"))
             list_files.append([file, file_time.strftime("%d/%m/%Y %H:%M"),  os.path.getsize(file)])
-            #item = QtGui.QStandardItem(file)
-            #model.appendRow(item)
         print("list_files", list_files)
         model = QFileSystemModel()
         path = "database"
@@ -191,7 +186,7 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         on récupère la date à laquelle on veut scinder la base en cours,
         on jette  la partie avant la date du 1er record et la partie après la date du dernier"""
 
-        print("baseDialog.btn_splitBase_clicked")
+        print("baseDialog.btn_splitBase_clicked  IN")
         self.te_infosBase.append("\nArchivage en cours...")
         # Compression de la base pour une sauvegarde avant destruction des records
         ## recupère nom de la base qui va être splitter
@@ -200,16 +195,27 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
         self.te_infosBase.append("\nArchivage fini...\n")
         self.btn_splitBase.setEnabled(False)
         self.cb_autoriseSplit.setChecked(False)
+        name_path_list = name.split('/')
+        print("name_path_list=",name_path_list)
+        name_arch = "./" + name_path_list[0] + "/archives/" + name_path_list[1]
+        print("name_arch=", name_arch)
 
         with open(name, 'rb') as f1:
             data = f1.read()
-        f = bz2.open(name + '.bz2', "wb")
+        # test si archive existe déja
+        if os.path.exists(name_arch + '.bz2'):
+            bt = QMessageBox.question(self,'ATTENTION !', "L'archive existe déjà, voulez-vous l'écraser ?",
+                                        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                                        defaultButton = QMessageBox.StandardButton.No )
+            if bt == QMessageBox.StandardButton.No:
+                name_arch = name_arch + 'new'
+        f = bz2.open(name_arch + '.bz2', "wb")
         f.write(data)
         f.close()
 
         # récupere la periode du split
         dt_deb_split = self.dt_firstRecord.dateTime()
-        dt_fin_split = self.dt_lastRecord.dateTime()
+        dt_fin_split = self.dt_lastRecord.dateTime().addDays(1)
         Database.split_base(self, dt_deb_split, dt_fin_split )
 
         basename, ok = QInputDialog.getText(self,"Nouveau nom :",
@@ -226,7 +232,8 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
             db = QSqlDatabase.addDatabase("QSQLITE", "conn_base")
             db.setDatabaseName("./database/" + basename)
             # Mise à jour des widgets
-            self.gb_baseCourante.setTitle(basename)
+            #self.gb_baseCourante.setTitle(basename)
+            self.lab_base_courante.setText(basename)
             self.btn_infosBase_clicked()
             self.update_split_gb()
             # Decompresse l'archive
@@ -234,7 +241,6 @@ class BaseDialog(QtWidgets.QDialog, Ui_Dialog):
             #    data = f.read()
             with open(name, 'wb') as f:
                 f.write(data)
-
 
         print("baseDialog.btn_splitBase_clicked OUT")
 

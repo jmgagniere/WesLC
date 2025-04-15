@@ -2,7 +2,7 @@ import sys, os
 from functools import partial
 
 from PySide6.QtSql import QSqlDatabase
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QLabel
+from PySide6.QtWidgets import QApplication, QMainWindow, QLabel
 from new_ui.UI_mainWindow import Ui_MainWindow
 from PySide6 import QtCore, QtWidgets
 from pyqtgraph import PlotWidget
@@ -16,7 +16,7 @@ from baseDialog import BaseDialog
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
-        print("main.__init__")
+        print("main.__init__   IN")
         super().__init__()
 
         self.setupUi(self)
@@ -50,7 +50,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("main.__init__ OUT")
 
     def init_widget(self):
-        print("main.init_widget")
+        print("main.init_widget   IN")
         # Widgets Légende
         self.key_list = []
         self.cb_val = []
@@ -96,12 +96,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.statusBar.addPermanentWidget(self.label2)
         self.update_statusBar()
 
-
-
         print("main.init_widget OUT")
 
     def setup_connections(self):
-        print("main.setup_connections")
+        print("main.setup_connections   IN")
         self.cb_calendrier.stateChanged.connect(self.cb_calendrier_stateChanged)
         self.dt_deb.dateTimeChanged.connect(self.dt_deb_changed)
         self.dt_fin.dateTimeChanged.connect(self.dt_fin_changed)
@@ -117,8 +115,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("main.setup_connections OUT")
 
     def init_plot(self):
-        print("main.init_plot")
-
+        print("main.init_plot   IN")
         # récupération des parametres graphe en base
         plot_param = Database.get_plot_param(self)
         print("plot_param=",plot_param)
@@ -199,8 +196,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("main.init_plot OUT")
 
     def plot(self):
-        print("main.plot ")
-        print(" plot button clicked")
+        print("main.plot    IN")
         # Mise à jour des LineEdit au dernier jour d'enregistrement en base
         if self.flag_fin_ajout_data_in_base:
             # self.get_date_last_record()
@@ -321,13 +317,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #print("main.update_crosshair OUT")
 
     def updateViews(self, p2, p1):
-        print("main.updateViews")
+        print("main.updateViews   IN")
         p2.setGeometry(p1.getViewBox().sceneBoundingRect())
         p2.linkedViewChanged(p1.getViewBox(), p2.XAxis)
         print("main.updateViews OUT")
 
     def update_statusBar(self):
-        print("main.update_statusBar")
+        print("main.update_statusBar   IN")
 
         db = QSqlDatabase.database("conn_base", True)
         name = QSqlDatabase.databaseName(db).split("/")[-1:][0]
@@ -340,14 +336,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("main.update_statusBar OUT")
 
     def checkBox_changed(self, id, state):
-        print(f"checkBox {id} state changed to {state}")
+        print("main.checkBox_changed IN")
+        #print(f"checkBox {id} state changed to {state}")
         if id == "base":
             self.cb_base_clicked()
         self.plot()
         print("main.checkBox_changed OUT")
 
     def cb_calendrier_stateChanged(self, state):
-        print("calendrier on=", state)
+        print("main.cb_calendrier_stateChanged IN")
+        #print("calendrier on=", state)
         if self.cb_calendrier.isChecked():
             self.dt_deb.setCalendarPopup(True)
             self.dt_fin.setCalendarPopup(True)
@@ -358,7 +356,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def dt_deb_changed(self):
-        print("deb_date_changed")
+        print("main.dt_deb_changed IN")
         self.deb_dateTime = self.dt_deb.dateTime()
         print("deb_dateTime=", self.deb_dateTime.toString("yyyy-MM-dd hh:mm"))
         periode = self.periode(self.deb_dateTime, self.fin_dateTime)
@@ -376,7 +374,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("main.dt_deb_changed OUT")
 
     def dt_fin_changed(self):
-        print("fin_date_changed")
+        print("main.dt_fin_changed IN")
         self.fin_dateTime = self.dt_fin.dateTime()
         print("fin_dateTime=", self.fin_dateTime.toString("yyyy-MM-dd hh:mm"))
         if self.deb_dateTime > self.fin_dateTime:
@@ -390,7 +388,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def btn_config_clicked(self):
-        print("main.btn_config clicked")
+        print("main.btn_config clicked  IN")
         configDialog =  ConfigDialog()
         result = configDialog.exec()
         if result == QtWidgets.QDialog.DialogCode.Accepted:
@@ -399,7 +397,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def btn_ftp_clicked(self):
-        print("main.btn_ftp clicked")
+        print("main.btn_ftp clicked  IN")
         ftpDialog = FtpDialog()
         result = ftpDialog.exec()
         if result == QtWidgets.QDialog.DialogCode.Accepted:
@@ -410,13 +408,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def btn_plot_clicked(self):
-        print("main.btn_plot_clicked")
+        print("main.btn_plot_clicked   IN")
         self.plot()
         print("main.btn_plot_clicked OUT")
 
 
     def actionBase_triggered(self):
-        print("main.actionBase triggered")
+        print("main.actionBase triggered  IN")
         baseDialog = BaseDialog()
         result = baseDialog.exec()
         if result == QtWidgets.QDialog.DialogCode.Accepted:
@@ -429,7 +427,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def cb_base_clicked(self):
-        print("main.cb_base_clicked")
+        print("main.cb_base_clicked   IN")
         print("cb_base_StateChanged", self.cb_base.isChecked())
         if self.cb_base.isChecked():
             self.cb_ph1.setCheckState(QtCore.Qt.CheckState.Checked)
@@ -446,7 +444,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def get_date_last_record(self):
         # Mise à jour des LineEdit à la date du dernier enregistrement en base
-        print("main.get_date_last_record")
+        print("main.get_date_last_record  IN")
         if self.f_base_vide:
             datedeb = "1900-01-01 00:00"
 
@@ -461,7 +459,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("main.get_date_last_record OUT")
 
     def periode(self, deb, fin):
-        print("main.periode ")
+        print("main.periode   IN")
         periode = deb.daysTo(fin)
         print("periode=", periode)
         print("main.periode OUT")

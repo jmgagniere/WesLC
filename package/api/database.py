@@ -1,16 +1,14 @@
-from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMessageBox
 from PySide6.QtSql import QSqlQuery, QSqlDatabase
 from PySide6.QtCore import QDateTime
 
 import os
-from datetime import datetime
 
 class Database(QSqlDatabase):
     is_instantiated = False
 
     def __init__(self):
-        print("database.__init__")
+        print("database.__init__   IN")
         """ Si il n'existe aucune base on crée une nouvelle base '.baseWes_ini.db' avec les tables suivantes:
             - ftp_param avec les champs host, login, passwd préremplis
             - plot_param avec les champs id, name, color, state, width préremplis
@@ -82,27 +80,8 @@ class Database(QSqlDatabase):
 
     # ************** Transfert FTP *****************
 
-    def init_transfert_param(self):
-        print("database.init_transfert_param")
-        query = QSqlQuery()
-
-        query.exec("DROP TABLE IF EXISTS 'ftp_param' ")
-
-        query.prepare(""" CREATE TABLE "ftp_param" (
-                          "host" TEXT NOT NULL,
-                          "login" TEXT NOT NULL,
-                          "passwd" TEXT NOT NULL) """)
-        query.exec()
-
-        query.prepare("""INSERT INTO ftp_param (host, login, passwd)VALUES ('82.64.197.53', 'jmg-ftp', 'jmg-wes@lc') """)
-
-        flag = query.exec()
-        #self.test_result(flag)
-        print("database.init_transfert_param OUT")
-        return ['82.64.197.53', 'jmg-ftp', 'jmg-wes@lc']
-
     def get_transfert_param(self):
-        print("database.get_transfert_param")
+        print("database.get_transfert_param   IN")
         db = QSqlDatabase.database("conn_ini", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
         ##print("database name =", QSqlDatabase.databaseName(db))
@@ -122,7 +101,7 @@ class Database(QSqlDatabase):
         return list
 
     def save_transfert_param(self, param_list):
-        print("database.save_transfert_param")
+        print("database.save_transfert_param IN")
         db = QSqlDatabase.database("conn_ini", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
         ##print("database name =", QSqlDatabase.databaseName(db))
@@ -143,7 +122,7 @@ class Database(QSqlDatabase):
     # *************** Plot Param ******************
 
     def get_plot_param(self):
-        print("database.get_plot_param")
+        print("database.get_plot_param  IN")
         db = QSqlDatabase.database("conn_ini", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
         ##print("database name =", QSqlDatabase.databaseName(db))
@@ -226,7 +205,7 @@ class Database(QSqlDatabase):
         return flag
 
     def get_datas_from_base(self, deb, fin):
-        print("database.get_datas_from_base", deb, " ", fin)
+        print("database.get_datas_from_base", deb, " ", fin, "IN")
         db = QSqlDatabase.database("conn_base", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
         ##print("database name =", QSqlDatabase.databaseName(db))
@@ -237,8 +216,7 @@ class Database(QSqlDatabase):
         self.fin = fin
         data = []
         query.prepare("""SELECT Time, w1, w2, w3, pulse_1, pince_1, pince_2, ph1, ph2, ph3, pa, base FROM weslc_new
-                                WHERE Time BETWEEN :deb AND :fin ORDER BY Time ASC
-                               """)
+                                WHERE Time BETWEEN :deb AND :fin ORDER BY Time ASC """)
 
         query.bindValue(":deb", self.deb)
         query.bindValue(":fin", self.fin)
@@ -254,7 +232,7 @@ class Database(QSqlDatabase):
         return data
 
     def get_lastRecordDate(self):
-        print("database.get_lastRecordDate")
+        print("database.get_lastRecordDate  IN")
         db = QSqlDatabase.database("conn_base", True)
         ## print("connection names = ", QSqlDatabase.connectionNames())
         ##print("database name =", QSqlDatabase.databaseName(db))
@@ -279,13 +257,12 @@ class Database(QSqlDatabase):
             #date = datetime.today().strftime("%Y-%m-%d")
             date = "1900-01-01"
 
-
         print("date=", date)
         print("database.get_lastRecordDate OUT")
         return date
 
     def get_firstRecordDate(self):
-        print("database.get_firstRecordDate")
+        print("database.get_firstRecordDate  IN")
         db = QSqlDatabase.database("conn_base", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
         ##name = QSqlDatabase.databaseName(db)
@@ -312,7 +289,7 @@ class Database(QSqlDatabase):
         return date
 
     def get_nbr_records(self):
-        print("database.get_nbr_records")
+        print("database.get_nbr_records  IN")
         db = QSqlDatabase.database("conn_base", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
         QSqlDatabase.databaseName(db)
@@ -325,7 +302,7 @@ class Database(QSqlDatabase):
 
     def base_periode(self, f_full = False):
         """Pour obtenir les dates du 1er et dernier enregistrement en base"""
-        print("database.base_periode type= ",f_full)
+        print("database.base_periode type= ",f_full, "  IN")
         db = QSqlDatabase.database("conn_base", True)
         print("connection names = ", QSqlDatabase.connectionNames())
         name = QSqlDatabase.databaseName(db)
@@ -345,7 +322,6 @@ class Database(QSqlDatabase):
             deb = query.value(0)
             print("datedeb=",deb)
 
-
         print("database.base_periode OUT")
         try:
             if not f_full:
@@ -363,7 +339,7 @@ class Database(QSqlDatabase):
         return ('0000-00-00', '0000-00-00')
 
     def base_optimise(self):
-        print("database.base_optimise")
+        print("database.base_optimise  IN")
         db = QSqlDatabase.database("conn_base", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
         QSqlDatabase.databaseName(db)
@@ -372,7 +348,7 @@ class Database(QSqlDatabase):
         print("database.base_optimise OUT")
 
     def get_current_base_name_in_base(self):
-        print("database.get_current_base_name_in_base")
+        print("database.get_current_base_name_in_base  IN")
         db = QSqlDatabase.database("conn_ini", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
         ##print("database name =", QSqlDatabase.databaseName(db))
@@ -386,7 +362,7 @@ class Database(QSqlDatabase):
         return name
 
     def change_current_database_in_base(self, name):
-        print("database.change_current_database_in_base")
+        print("database.change_current_database_in_base  IN")
         print("change_current_database_in_base to:", name)
         db = QSqlDatabase.database("conn_ini", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
@@ -400,7 +376,7 @@ class Database(QSqlDatabase):
         print("database.change_current_database_in_base OUT")
 
     def split_base(self,date_deb, date_fin):
-        print("database.split_base")
+        print("database.split_base IN")
         db = QSqlDatabase.database("conn_base", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
         ##print("database name =", QSqlDatabase.databaseName(db))
@@ -426,7 +402,7 @@ class Database(QSqlDatabase):
         print("database.split_base OUT")
 
     def initialise_baseWes(self):
-        print("database.initialise_baseWes")
+        print("database.initialise_baseWes IN")
         db = QSqlDatabase.addDatabase("QSQLITE","conn_base")
         db.setDatabaseName("./database/baseWes.db")
         ##print("connection names = ", QSqlDatabase.connectionNames())
@@ -451,8 +427,3 @@ class Database(QSqlDatabase):
         query.exec()
 
         print("database.initialise_baseWes OUT")
-
-
-
-
-
