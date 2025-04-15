@@ -92,13 +92,13 @@ class Database(QSqlDatabase):
 
         record = query.record()
         nbr_col = record.count()
-        list = []
+        list_para = []
         while query.next():
             for i in range(nbr_col):
-                list.append(query.value(i))
+                list_para.append(query.value(i))
 
         print("database.get_transfert_param OUT")
-        return list
+        return list_para
 
     def save_transfert_param(self, param_list):
         print("database.save_transfert_param IN")
@@ -133,15 +133,15 @@ class Database(QSqlDatabase):
 
         record = query.record()
         nbr_col = record.count()
-        list = []
+        list_para = []
         while query.next():
             sub_list = []
             for i in range(nbr_col):
                 sub_list.append(query.value(i))
-            list.append(sub_list)
+            list_para.append(sub_list)
         #print("list_param=", list)
         print("database.get_plot_param OUT")
-        return list
+        return list_para
 
     def save_plot_param(self, **b_dict):
         print("database.save_plot_param")
