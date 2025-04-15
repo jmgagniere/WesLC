@@ -399,8 +399,7 @@ class Database(QSqlDatabase):
         query.exec()
         print("database.change_current_database_in_base OUT")
 
-
-    def split_base(self,date, save_after):
+    def split_base(self,date_deb, date_fin):
         print("database.split_base")
         db = QSqlDatabase.database("conn_base", True)
         ##print("connection names = ", QSqlDatabase.connectionNames())
@@ -408,14 +407,16 @@ class Database(QSqlDatabase):
         db.open()
         query = QSqlQuery(db)
         #convert date to time in base
-        split_time = QDateTime.toString(date, "yyyy-MM-dd hh:mm")
-        print("split_time",split_time)
 
-        if save_after:
-            query.prepare(""" DELETE FROM weslc_new WHERE Time < :timesplit """)
-        else:
-            query.prepare(""" DELETE FROM weslc_new WHERE Time >= :timesplit """)
-        query.bindValue(":timesplit", split_time)
+        deb_time = QDateTime.toString(date_deb, "yyyy-MM-dd hh:mm")
+        fin_time = QDateTime.toString(date_fin, "yyyy-MM-dd hh:mm")
+
+        query.prepare(""" DELETE FROM weslc_new WHERE Time < :deb_time """)
+        query.bindValue(":deb_time", deb_time)
+        query.exec()
+
+        query.prepare(""" DELETE FROM weslc_new WHERE Time >= :fin_time """)
+        query.bindValue(":fin_time", fin_time)
         query.exec()
         # optimise base
         query.exec("VACUUM")

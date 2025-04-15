@@ -17,30 +17,30 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QDateEdit, QDialog,
     QGridLayout, QGroupBox, QHeaderView, QLabel,
-    QLayout, QPushButton, QRadioButton, QSizePolicy,
-    QTextEdit, QTreeView, QVBoxLayout, QWidget)
+    QPushButton, QSizePolicy, QSpacerItem, QTextEdit,
+    QTreeView, QVBoxLayout, QWidget)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(1046, 445)
+        Dialog.resize(950, 440)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
         Dialog.setSizePolicy(sizePolicy)
-        Dialog.setMinimumSize(QSize(650, 440))
-        Dialog.setMaximumSize(QSize(1500, 800))
+        Dialog.setMinimumSize(QSize(950, 440))
+        Dialog.setMaximumSize(QSize(950, 440))
         self.gb_baseCourante = QGroupBox(Dialog)
         self.gb_baseCourante.setObjectName(u"gb_baseCourante")
-        self.gb_baseCourante.setGeometry(QRect(790, 12, 364, 411))
+        self.gb_baseCourante.setGeometry(QRect(692, 14, 240, 407))
         sizePolicy.setHeightForWidth(self.gb_baseCourante.sizePolicy().hasHeightForWidth())
         self.gb_baseCourante.setSizePolicy(sizePolicy)
         self.gb_baseCourante.setFlat(False)
         self.layoutWidget = QWidget(self.gb_baseCourante)
         self.layoutWidget.setObjectName(u"layoutWidget")
-        self.layoutWidget.setGeometry(QRect(-2, 32, 232, 384))
+        self.layoutWidget.setGeometry(QRect(-2, 32, 232, 359))
         self.verticalLayout = QVBoxLayout(self.layoutWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(11, 0, 0, 0)
@@ -63,8 +63,8 @@ class Ui_Dialog(object):
         self.te_infosBase.setObjectName(u"te_infosBase")
         sizePolicy.setHeightForWidth(self.te_infosBase.sizePolicy().hasHeightForWidth())
         self.te_infosBase.setSizePolicy(sizePolicy)
-        self.te_infosBase.setMinimumSize(QSize(220, 226))
-        self.te_infosBase.setMaximumSize(QSize(220, 220))
+        self.te_infosBase.setMinimumSize(QSize(220, 200))
+        self.te_infosBase.setMaximumSize(QSize(220, 200))
 
         self.verticalLayout.addWidget(self.te_infosBase)
 
@@ -78,82 +78,116 @@ class Ui_Dialog(object):
 
         self.gb_splitBase = QGroupBox(Dialog)
         self.gb_splitBase.setObjectName(u"gb_splitBase")
-        self.gb_splitBase.setGeometry(QRect(24, 18, 744, 411))
+        self.gb_splitBase.setGeometry(QRect(16, 10, 649, 131))
         sizePolicy.setHeightForWidth(self.gb_splitBase.sizePolicy().hasHeightForWidth())
         self.gb_splitBase.setSizePolicy(sizePolicy)
         self.gb_splitBase.setMinimumSize(QSize(350, 120))
         self.gb_splitBase.setFlat(False)
-        self.layoutWidget_2 = QWidget(self.gb_splitBase)
-        self.layoutWidget_2.setObjectName(u"layoutWidget_2")
-        self.layoutWidget_2.setGeometry(QRect(0, 28, 349, 95))
-        self.gridLayout_2 = QGridLayout(self.layoutWidget_2)
+        self.gridLayout_2 = QGridLayout(self.gb_splitBase)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.gridLayout_2.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
-        self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.label = QLabel(self.layoutWidget_2)
+        self.label = QLabel(self.gb_splitBase)
         self.label.setObjectName(u"label")
+        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy)
 
         self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
 
-        self.label_3 = QLabel(self.layoutWidget_2)
-        self.label_3.setObjectName(u"label_3")
+        self.lab_firstRec = QLabel(self.gb_splitBase)
+        self.lab_firstRec.setObjectName(u"lab_firstRec")
+        sizePolicy.setHeightForWidth(self.lab_firstRec.sizePolicy().hasHeightForWidth())
+        self.lab_firstRec.setSizePolicy(sizePolicy)
+        self.lab_firstRec.setMinimumSize(QSize(90, 21))
+        self.lab_firstRec.setMaximumSize(QSize(90, 21))
 
-        self.gridLayout_2.addWidget(self.label_3, 0, 1, 1, 2)
+        self.gridLayout_2.addWidget(self.lab_firstRec, 0, 1, 1, 1)
 
-        self.label_2 = QLabel(self.layoutWidget_2)
+        self.horizontalSpacer = QSpacerItem(164, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer, 0, 2, 1, 1)
+
+        self.label_2 = QLabel(self.gb_splitBase)
         self.label_2.setObjectName(u"label_2")
+        sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy)
 
         self.gridLayout_2.addWidget(self.label_2, 0, 3, 1, 1)
 
-        self.dt_firstRecord = QDateEdit(self.layoutWidget_2)
+        self.lab_lastRec = QLabel(self.gb_splitBase)
+        self.lab_lastRec.setObjectName(u"lab_lastRec")
+        self.lab_lastRec.setMinimumSize(QSize(90, 21))
+        self.lab_lastRec.setMaximumSize(QSize(90, 21))
+
+        self.gridLayout_2.addWidget(self.lab_lastRec, 0, 4, 1, 1)
+
+        self.label_3 = QLabel(self.gb_splitBase)
+        self.label_3.setObjectName(u"label_3")
+
+        self.gridLayout_2.addWidget(self.label_3, 1, 0, 1, 1)
+
+        self.dt_firstRecord = QDateEdit(self.gb_splitBase)
         self.dt_firstRecord.setObjectName(u"dt_firstRecord")
-        self.dt_firstRecord.setMinimumSize(QSize(106, 0))
+        sizePolicy.setHeightForWidth(self.dt_firstRecord.sizePolicy().hasHeightForWidth())
+        self.dt_firstRecord.setSizePolicy(sizePolicy)
+        self.dt_firstRecord.setMinimumSize(QSize(90, 0))
 
-        self.gridLayout_2.addWidget(self.dt_firstRecord, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.dt_firstRecord, 1, 1, 1, 1)
 
-        self.dt_splitRecord = QDateEdit(self.layoutWidget_2)
-        self.dt_splitRecord.setObjectName(u"dt_splitRecord")
-        self.dt_splitRecord.setMinimumSize(QSize(106, 0))
-        self.dt_splitRecord.setMaximumSize(QSize(100, 16777215))
+        self.label_4 = QLabel(self.gb_splitBase)
+        self.label_4.setObjectName(u"label_4")
 
-        self.gridLayout_2.addWidget(self.dt_splitRecord, 1, 1, 1, 2)
+        self.gridLayout_2.addWidget(self.label_4, 1, 3, 1, 1)
 
-        self.dt_lastRecord = QDateEdit(self.layoutWidget_2)
+        self.dt_lastRecord = QDateEdit(self.gb_splitBase)
         self.dt_lastRecord.setObjectName(u"dt_lastRecord")
-        self.dt_lastRecord.setMinimumSize(QSize(106, 0))
+        sizePolicy.setHeightForWidth(self.dt_lastRecord.sizePolicy().hasHeightForWidth())
+        self.dt_lastRecord.setSizePolicy(sizePolicy)
+        self.dt_lastRecord.setMinimumSize(QSize(90, 0))
 
-        self.gridLayout_2.addWidget(self.dt_lastRecord, 1, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.dt_lastRecord, 1, 4, 1, 1)
 
-        self.cb_autoriseSplit = QCheckBox(self.layoutWidget_2)
+        self.cb_autoriseSplit = QCheckBox(self.gb_splitBase)
         self.cb_autoriseSplit.setObjectName(u"cb_autoriseSplit")
+        self.cb_autoriseSplit.setMaximumSize(QSize(16777215, 30))
 
-        self.gridLayout_2.addWidget(self.cb_autoriseSplit, 2, 0, 1, 2)
+        self.gridLayout_2.addWidget(self.cb_autoriseSplit, 2, 0, 1, 1)
 
-        self.btn_splitBase = QPushButton(self.layoutWidget_2)
+        self.btn_splitBase = QPushButton(self.gb_splitBase)
         self.btn_splitBase.setObjectName(u"btn_splitBase")
         self.btn_splitBase.setEnabled(False)
+        sizePolicy.setHeightForWidth(self.btn_splitBase.sizePolicy().hasHeightForWidth())
+        self.btn_splitBase.setSizePolicy(sizePolicy)
+        self.btn_splitBase.setMinimumSize(QSize(183, 0))
+        self.btn_splitBase.setMaximumSize(QSize(16777215, 30))
 
-        self.gridLayout_2.addWidget(self.btn_splitBase, 2, 2, 1, 2)
+        self.gridLayout_2.addWidget(self.btn_splitBase, 2, 3, 1, 2)
 
-        self.btn_loadBase = QPushButton(self.gb_splitBase)
+        self.gb_bases = QGroupBox(Dialog)
+        self.gb_bases.setObjectName(u"gb_bases")
+        self.gb_bases.setGeometry(QRect(16, 154, 649, 271))
+        self.gridLayout = QGridLayout(self.gb_bases)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.btn_loadBase = QPushButton(self.gb_bases)
         self.btn_loadBase.setObjectName(u"btn_loadBase")
-        self.btn_loadBase.setGeometry(QRect(20, 132, 141, 32))
         sizePolicy.setHeightForWidth(self.btn_loadBase.sizePolicy().hasHeightForWidth())
         self.btn_loadBase.setSizePolicy(sizePolicy)
-        self.tree_view = QTreeView(self.gb_splitBase)
+
+        self.gridLayout.addWidget(self.btn_loadBase, 0, 0, 1, 1)
+
+        self.tree_view = QTreeView(self.gb_bases)
         self.tree_view.setObjectName(u"tree_view")
-        self.tree_view.setGeometry(QRect(20, 168, 687, 213))
-        self.rb_garde_apres_date_split = QRadioButton(self.gb_splitBase)
-        self.rb_garde_apres_date_split.setObjectName(u"rb_garde_apres_date_split")
-        self.rb_garde_apres_date_split.setGeometry(QRect(400, 40, 165, 20))
-        self.rb_garde_avant_date_split = QRadioButton(self.gb_splitBase)
-        self.rb_garde_avant_date_split.setObjectName(u"rb_garde_avant_date_split")
-        self.rb_garde_avant_date_split.setGeometry(QRect(400, 66, 165, 20))
-        self.btn_kill_base = QPushButton(self.gb_splitBase)
+        sizePolicy.setHeightForWidth(self.tree_view.sizePolicy().hasHeightForWidth())
+        self.tree_view.setSizePolicy(sizePolicy)
+        self.tree_view.setMinimumSize(QSize(600, 0))
+
+        self.gridLayout.addWidget(self.tree_view, 1, 0, 1, 3)
+
+        self.btn_kill_base = QPushButton(self.gb_bases)
         self.btn_kill_base.setObjectName(u"btn_kill_base")
-        self.btn_kill_base.setGeometry(QRect(176, 132, 101, 32))
         sizePolicy.setHeightForWidth(self.btn_kill_base.sizePolicy().hasHeightForWidth())
         self.btn_kill_base.setSizePolicy(sizePolicy)
+
+        self.gridLayout.addWidget(self.btn_kill_base, 0, 1, 1, 1)
+
 
         self.retranslateUi(Dialog)
 
@@ -167,14 +201,16 @@ class Ui_Dialog(object):
         self.btn_optimiseBase.setText(QCoreApplication.translate("Dialog", u"Optimise", None))
         self.btn_base_OK.setText(QCoreApplication.translate("Dialog", u"OK", None))
         self.gb_splitBase.setTitle(QCoreApplication.translate("Dialog", u"Split Base", None))
-        self.label.setText(QCoreApplication.translate("Dialog", u"Date 1er Rec", None))
-        self.label_3.setText(QCoreApplication.translate("Dialog", u"Date Split Rec", None))
-        self.label_2.setText(QCoreApplication.translate("Dialog", u"Date fin Rec", None))
+        self.label.setText(QCoreApplication.translate("Dialog", u"Date 1er Rec:", None))
+        self.lab_firstRec.setText(QCoreApplication.translate("Dialog", u"YYYY-MM-DD", None))
+        self.label_2.setText(QCoreApplication.translate("Dialog", u"Date fin Rec:", None))
+        self.lab_lastRec.setText(QCoreApplication.translate("Dialog", u"YYYY-MM-DD", None))
+        self.label_3.setText(QCoreApplication.translate("Dialog", u"Split avant:", None))
+        self.label_4.setText(QCoreApplication.translate("Dialog", u"Split apr\u00e8s", None))
         self.cb_autoriseSplit.setText(QCoreApplication.translate("Dialog", u"Autorise Split", None))
         self.btn_splitBase.setText(QCoreApplication.translate("Dialog", u"Split Base", None))
+        self.gb_bases.setTitle(QCoreApplication.translate("Dialog", u"Bases:", None))
         self.btn_loadBase.setText(QCoreApplication.translate("Dialog", u"Charge autre base", None))
-        self.rb_garde_apres_date_split.setText(QCoreApplication.translate("Dialog", u"Garde apr\u00e8s Date Split", None))
-        self.rb_garde_avant_date_split.setText(QCoreApplication.translate("Dialog", u"Garde avant Date Split", None))
         self.btn_kill_base.setText(QCoreApplication.translate("Dialog", u"Supprime", None))
     # retranslateUi
 
