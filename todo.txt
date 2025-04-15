@@ -9,3 +9,4 @@ Améliorations:
     - créer une table "base" qui contiendrait les bases existantes et la base courante.
 
 
+2025-04-13: Après chargement Nvlle base les champs de date de split ne sont pas à jour !
