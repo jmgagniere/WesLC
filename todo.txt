@@ -1,12 +1,1 @@
-Problèmes:
-1 - Gestion de l'endroit de stockage de la base et du répertoire temporaire pour ftp
-
-
-Améliorations:
-1-Pouvoir travailler avec une base au choix, il serait interessant par exemple de n'avoir que les
-  datas des 30 derniers jours en base, le reste étant dans des bases archives.
-  Pour ce faire:
-    - créer une table "base" qui contiendrait les bases existantes et la base courante.
-
-
-2025-04-13: Après chargement Nvlle base les champs de date de split ne sont pas à jour !
+Ajout création des repertoires par défaut
