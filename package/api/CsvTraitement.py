@@ -10,7 +10,7 @@ class CsvTraitement:
         print("CsvTraitement.__init__  IN")
         self.dateImport = dateImport
 
-        print("dateImport=", self.dateImport)
+        ##print("dateImport=", self.dateImport)
         self.readCsvFiles()
         print("CsvTraitement.__init__ OUT")
 
@@ -31,7 +31,7 @@ class CsvTraitement:
         file_data_list = [temp_data, pulse_data, pince_data, teleinfo_data]
         data_list = ["Temp", "Pulse", "Pince", "TéléInfo"]
 
-        self.nb_row_attendu_list = [1442, 1441, 1441, 1442]
+        ##self.nb_row_attendu_list = [1442, 1441, 1441, 1442]
         # list_i_time = liste d'index convertit en time
         list_i_time = []
         for j in range(1440):
@@ -49,11 +49,8 @@ class CsvTraitement:
             f = open(file_path_list[i], 'r', encoding='UTF-8')
             data = f.read()
             rows = data.split('\n')
-            nb_row = len(rows)
-            delta_row =  self.nb_row_attendu_list[i] - nb_row
-            print("nombre de lignes=",len(rows), "pour ", data_list[i])
+            ##print("nombre de lignes=",len(rows), "pour ", data_list[i])
 
-            index = 0
             for row in rows:
                 split_row =  row.split(',')
                 # suppression des colonnes inutiles
@@ -215,7 +212,7 @@ class CsvTraitement:
             sublist1[1] = self.dateImport + " " + sublist1[1]
 
             # Insertion de time_utc
-            datelocal =  QDateTime.fromString(sublist1[1], ("yyyy-MM-dd hh:mm"))
+            datelocal =  QDateTime.fromString(sublist1[1], "yyyy-MM-dd hh:mm")
             dateutc =  datelocal.toUTC().toString("yyyy-MM-dd hh:mm")
             sublist1.insert(2, dateutc)
 

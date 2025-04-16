@@ -65,13 +65,13 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
     def retrieve_ftp_param(self):
         print("ftpDialog.retrieve_ftp_param IN")
         param_list = Database.get_transfert_param(self)
-        self.host = param_list[0]
-        self.login = param_list[1]
-        self.passwd = param_list[2]
+        host = param_list[0]
+        login = param_list[1]
+        passwd = param_list[2]
 
-        self.le_host.setText(self.host)
-        self.le_login.setText(self.login)
-        self.le_passwd.setText(self.passwd)
+        self.le_host.setText(host)
+        self.le_login.setText(login)
+        self.le_passwd.setText(passwd)
         print("ftpDialog.retrieve_ftp_param OUT")
 
     def btn_ajout_base_clicked(self):
@@ -112,10 +112,10 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
     def btn_transfer_clicked(self):
         print("ftpDialog.btn_transfer_clicked  IN")
 
-        self.dateImport_str =  self.dateImport.toString("yyyy-MM-dd")
+        dateImport_str =  self.dateImport.toString("yyyy-MM-dd")
 
-        an = self.dateImport_str[0:4]
-        date = self.dateImport_str[5:10]
+        an = dateImport_str[0:4]
+        date = dateImport_str[5:10]
         print('an=', an, 'date=', date)
 
         host = self.le_host.text()
@@ -137,7 +137,7 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
 
         # Changement de répertoire
         for index, par in enumerate(self.para_nom_rep):
-            result = ftp.cwd(par + '/' + an)
+            ftp.cwd(par + '/' + an)
             filename = self.para_nom_fic[index] + date + '.csv'
             self.te_infos_transfer.append('Fichier:' + ftp.pwd() + '/' + filename)
             QtWidgets.QApplication.processEvents()
