@@ -1,7 +1,7 @@
 ftp_temp/
-database/
 __pycache__/
 package/__pycache__/
 .idea/
 /main_new copie.py
 /new_ui/UI_mainWindow copie.ui
+/database/
