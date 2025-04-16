@@ -13,7 +13,7 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
     para_nom_rep = ('TEMP', 'PLS', 'PCE', 'TELEINFO')
 
     def __init__(self):
-        print("ftpDialog.__init__ IN")
+        #print("ftpDialog.__init__ IN")
         super().__init__()
         self.setupUi(self)
 
@@ -26,18 +26,18 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
         self.dateImport = QtCore.QDate.fromString(date, "yyyy-MM-dd").addDays(1)
         self.date_import.setDate(self.dateImport)
         self.te_infos_transfer.clear()
-        print("ftpDialog.__init__ OUT")
+        #print("ftpDialog.__init__ OUT")
 
     def modify_widget(self):
-        print("ftpDialog.modify_widget IN")
+        #print("ftpDialog.modify_widget IN")
 
         self.le_passwd.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
         self.date_import.setCalendarPopup(True)
         self.btn_ajout_base.setEnabled(True)
-        print("ftpDialog.modify_widget OUT")
+        #print("ftpDialog.modify_widget OUT")
 
     def setup_connections(self):
-        print("ftpDialog.setup_connections  IN")
+        #print("ftpDialog.setup_connections  IN")
         self.cb_passVisible.stateChanged.connect(self.cb_passVisible_stateChanged)
         self.btn_abandon.clicked.connect(self.hide)
         self.btn_save_param.clicked.connect(self.btn_save_param_clicked)
@@ -45,25 +45,25 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
         self.btn_test.clicked.connect(self.btn_test_clicked)
         self.btn_transfer.clicked.connect(self.btn_transfer_clicked)
         self.btn_ajout_base.clicked.connect(self.btn_ajout_base_clicked)
-        print("ftpDialog.setup_connections OUT")
+        #print("ftpDialog.setup_connections OUT")
 
 
     def cb_passVisible_stateChanged(self):
-        print("ftpDialog.cb_passVisible_stateChanged  IN")
+        #print("ftpDialog.cb_passVisible_stateChanged  IN")
         if self.cb_passVisible.isChecked():
             self.le_passwd.setEchoMode(QtWidgets.QLineEdit.EchoMode.Normal)
         else:
             self.le_passwd.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
-            print("ftpDialog.cb_passVisible_stateChanged OUT")
+            #print("ftpDialog.cb_passVisible_stateChanged OUT")
 
     def date_import_dateChanged(self):
-        print("ftpDialog.date_import_dateChanged IN")
+        #print("ftpDialog.date_import_dateChanged IN")
         self.dateImport =  self.date_import.date()
-        print("nvelle date=",self.dateImport.toString("yyyy-MM-dd"))
-        print("ftpDialog.date_import_dateChanged OUT")
+        #print("nvelle date=",self.dateImport.toString("yyyy-MM-dd"))
+        #print("ftpDialog.date_import_dateChanged OUT")
 
     def retrieve_ftp_param(self):
-        print("ftpDialog.retrieve_ftp_param IN")
+        #print("ftpDialog.retrieve_ftp_param IN")
         param_list = Database.get_transfert_param(self)
         host = param_list[0]
         login = param_list[1]
@@ -72,25 +72,25 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
         self.le_host.setText(host)
         self.le_login.setText(login)
         self.le_passwd.setText(passwd)
-        print("ftpDialog.retrieve_ftp_param OUT")
+        #print("ftpDialog.retrieve_ftp_param OUT")
 
     def btn_ajout_base_clicked(self):
-        print("ftpDialog.btn_ajout_base_clicked  IN")
+        #print("ftpDialog.btn_ajout_base_clicked  IN")
         self.te_infos_transfer.append("Ajout en base en cours.")
         CsvTraitement(self.dateImport.toString("yyyy-MM-dd"))
         self.hide()
         self.btn_ajout_base.setEnabled(False)
         self.done(QtWidgets.QDialog.DialogCode.Accepted)
-        print("ftpDialog.btn_ajout_base_clicked OUT")
+        #print("ftpDialog.btn_ajout_base_clicked OUT")
 
     def btn_save_param_clicked(self):
-        print("ftpDialog.btn_save_param_clicked  IN")
+        #print("ftpDialog.btn_save_param_clicked  IN")
         list_param = [self.le_host.text(), self.le_login.text(), self.le_passwd.text()]
         Database.save_transfert_param(self, list_param)
-        print("ftpDialog.btn_save_param_clicked OUT")
+        #print("ftpDialog.btn_save_param_clicked OUT")
 
     def btn_test_clicked(self):
-        print("ftpDialog.btn_test_clicked  IN")
+        #print("ftpDialog.btn_test_clicked  IN")
         self.te_infos_transfer.append("Bouton Ajout Base Enabled")
         self.btn_ajout_base.setEnabled(True)
         host = self.le_host.text()
@@ -107,16 +107,16 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
             self.te_infos_transfer.append("Erreur:" + str(e))
 
         QtWidgets.QApplication.processEvents()
-        print("ftpDialog.btn_test_clicked OUT")
+        #print("ftpDialog.btn_test_clicked OUT")
 
     def btn_transfer_clicked(self):
-        print("ftpDialog.btn_transfer_clicked  IN")
+        #print("ftpDialog.btn_transfer_clicked  IN")
 
         dateImport_str =  self.dateImport.toString("yyyy-MM-dd")
 
         an = dateImport_str[0:4]
         date = dateImport_str[5:10]
-        print('an=', an, 'date=', date)
+        #print('an=', an, 'date=', date)
 
         host = self.le_host.text()
         login = self.le_login.text()
@@ -171,6 +171,6 @@ class FtpDialog(QtWidgets.QDialog, Ui_Dialog):
             # Activation bouton Ajout_base
             self.btn_ajout_base.setEnabled(True)
 
-        print('Fertig')
-        print("ftpDialog.btn_transfer_clicked OUT")
+        #print('Fertig')
+        #print("ftpDialog.btn_transfer_clicked OUT")
 

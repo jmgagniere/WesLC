@@ -33,7 +33,7 @@ class ConfigDialog(QtWidgets.QDialog, Ui_Dialog):
 
         # - Récuperation des parametres en base
         self.bloc_param = Database.get_plot_param(self)
-        #print("bloc_param", self.bloc_param)
+        ##print("bloc_param", self.bloc_param)
         # query_string = "SELECT id, name, color, state, width FROM plot_param"
         # self.bloc_param est une liste de liste, chaque sous liste contient les 5 éléments issus de query_string
         # on va récuperer une liste  key_list qui servira de clés pour des dictionnaires
@@ -53,11 +53,11 @@ class ConfigDialog(QtWidgets.QDialog, Ui_Dialog):
             cbox_val.append(blo[3])
             spbox_val.append(blo[4])
 
-        """print("key_list", self.key_list)
-        print("le_val", le_val)
-        print("color_val", color_val)
-        print("cbox_val", cbox_val)
-        print("spbox_val", spbox_val)"""
+        """#print("key_list", self.key_list)
+        #print("le_val", le_val)
+        #print("color_val", color_val)
+        #print("cbox_val", cbox_val)
+        #print("spbox_val", spbox_val)"""
 
         # creation des dictionnaires
         self.dict_cbox_val = dict(zip(self.key_list, cbox_val))
@@ -87,11 +87,11 @@ class ConfigDialog(QtWidgets.QDialog, Ui_Dialog):
             self.dict_spbox_widget[key].setValue(self.dict_spbox_val[key])
 
     def btn_abandon_clicked(self):
-        print("btn_abandon clicked")
+        #print("btn_abandon clicked")
         self.hide()
 
     def btn_save_clicked(self):
-        print("btn_save clicked")
+        #print("btn_save clicked")
         #cb_Check = []
         # Mise à jour de bloc_param
         #   checkBoxs
@@ -108,28 +108,28 @@ class ConfigDialog(QtWidgets.QDialog, Ui_Dialog):
             self.bloc_param[i][2] = self.list_color_widget[i].palette().button().color().name()
         #   spinBoxs
         for i, val in enumerate(self.list_width_widget):
-            #print("i=", i, "val=",val)
+            ##print("i=", i, "val=",val)
             self.bloc_param[i][4] = val.value()
 
-        #print("bloc_param_s", self.bloc_param)
+        ##print("bloc_param_s", self.bloc_param)
         blocs_data = dict(zip(self.key_list, self.bloc_param))
-        #print("blocs_data", blocs_data)
+        ##print("blocs_data", blocs_data)
 
         Database.save_plot_param(self,**blocs_data)
         self.done(QtWidgets.QDialog.DialogCode.Accepted)
 
     def choix_couleur(self, key):
-        print('Choix couleur pour ', key)
+        #print('Choix couleur pour ', key)
         couleur = QtWidgets.QColorDialog.getColor().name()
-        print('couleur =', couleur)
+        #print('couleur =', couleur)
         # Change la couleur du bouton
-        #print("dict_color.get(id)", self.dict_color_widget[key])
+        ##print("dict_color.get(id)", self.dict_color_widget[key])
         self.dict_color_widget[key].setStyleSheet('QPushButton {background-color:' + couleur + '; border:  none}')
 
 
     """def module_changed(self, id, state):
-        print("Widget state changed", id, state)
+        #print("Widget state changed", id, state)
         self.blocs_data_dict[id].cb_check = state
 
     def le_text_changed(self, id, text):
-        print("text changed", id, text)"""
+        #print("text changed", id, text)"""

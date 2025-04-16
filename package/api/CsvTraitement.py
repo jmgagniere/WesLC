@@ -7,15 +7,15 @@ from package.api.database import Database
 
 class CsvTraitement:
     def __init__(self, dateImport):
-        print("CsvTraitement.__init__  IN")
+        #print("CsvTraitement.__init__  IN")
         self.dateImport = dateImport
 
-        ##print("dateImport=", self.dateImport)
+        ###print("dateImport=", self.dateImport)
         self.readCsvFiles()
-        print("CsvTraitement.__init__ OUT")
+        #print("CsvTraitement.__init__ OUT")
 
     def readCsvFiles(self):
-        print("CsvTraitement.readCsvFiles  IN")
+        #print("CsvTraitement.readCsvFiles  IN")
         date = self.dateImport[5:10]
 
         path_to_file_temp = f"ftp_temp/TP-{date}.csv"
@@ -36,20 +36,20 @@ class CsvTraitement:
         list_i_time = []
         for j in range(1440):
             list_i_time.append(self.convert_index_to_time_string(j))
-        #print("list_i_time", list_i_time)
+        ##print("list_i_time", list_i_time)
 
         list_position_trou = []
 
         for i in range(4):
             # Test existence fichiers à importer
-            print("Traitement en cours:", data_list[i])
+            #print("Traitement en cours:", data_list[i])
             if not os.path.isfile(file_path_list[i]):
                 QMessageBox.critical(None, "Erreur:", f" Fichier {file_path_list[i][12:]} absent !")
                 return
             f = open(file_path_list[i], 'r', encoding='UTF-8')
             data = f.read()
             rows = data.split('\n')
-            ##print("nombre de lignes=",len(rows), "pour ", data_list[i])
+            ###print("nombre de lignes=",len(rows), "pour ", data_list[i])
 
             for row in rows:
                 split_row =  row.split(',')
@@ -67,37 +67,37 @@ class CsvTraitement:
             file_data_list[i] = (file_data_list[i])[1:]
             #suppression dernière ligne vide
             file_data_list[i] = file_data_list[i][0:-1]
-            #print("temp_data=", (file_data_list[i])[0:5])
-            #print("temp_data=", (file_data_list[i])[-5:])
+            ##print("temp_data=", (file_data_list[i])[0:5])
+            ##print("temp_data=", (file_data_list[i])[-5:])
 
             # Ajout de la ligne manquante pulses
             if i == 1:
                 dp = file_data_list[i][0]
-                print("dp=", dp)
+                #print("dp=", dp)
                 #dp0 = ['00:00', str(float(dp[1])/2), str(float(dp[2])/2), str(float(dp[3])/2), str(float(dp[4])/2)]
                 #dp1 = ['00:01', str(float(dp[1])/2), str(float(dp[2])/2), str(float(dp[3])/2), str(float(dp[4])/2)]
                 dp0 = ['00:00', str(float(dp[1])/2)]
                 dp1 = ['00:01', str(float(dp[1])/2)]
 
-                print("dp0=",dp0)
+                #print("dp0=",dp0)
                 file_data_list[1].insert(0,dp0)
                 file_data_list[1][1] = dp1
 
             # Ajout de la ligne manquante pinces
             if i == 2:
                 dp = file_data_list[i][0]
-                print("dp=", dp)
+                #print("dp=", dp)
                 #dp0 = ['00:00', dp[1], dp[2], dp[3], dp[4]]
                 #dp1 = ['00:01', dp[1], dp[2], dp[3], dp[4]]
                 dp0 = ['00:00', dp[1], dp[2]]
                 dp1 = ['00:01', dp[1], dp[2]]
 
-                print("dp0=",dp0)
+                #print("dp0=",dp0)
                 file_data_list[i].insert(0,dp0)
                 file_data_list[i][1] = dp1
 
             nb_row = len(file_data_list[i])
-            print("nb_row verif de i=",i,":", nb_row)
+            #print("nb_row verif de i=",i,":", nb_row)
             # Si pas de probleme nb_row = 1440
             delta_row = 1440 - nb_row
 
@@ -111,18 +111,18 @@ class CsvTraitement:
                 list_time = []
                 for j in range(nb_row):
                     list_time.append(((file_data_list[i])[j])[0])
-                #print("list_time=", list_time)
+                ##print("list_time=", list_time)
 
                 c = list(filter(lambda x: x not in list_time, list_i_time ))
-                print("difference=",c)
+                #print("difference=",c)
 
                 list_position_trou.append([i, c])
 
         # fin du for
-        #print("file_data_list=", file_data_list)
+        ##print("file_data_list=", file_data_list)
         # Recherche trous
-        print("")
-        print("list-trou=", list_position_trou)
+        #print("")
+        #print("list-trou=", list_position_trou)
         # determine le nombre de trous par liste
         nbr_trou_temp = 0
         nbr_trou_pulse = 0
@@ -146,42 +146,42 @@ class CsvTraitement:
                 nbr_trou_tinfos = len(t[1])
                 list_trou_tinfos = list(t[1])
 
-        print("nbrtrous=", (nbr_trou_temp, nbr_trou_pulse, nbr_trou_pince, nbr_trou_tinfos))
+        #print("nbrtrous=", (nbr_trou_temp, nbr_trou_pulse, nbr_trou_pince, nbr_trou_tinfos))
 
         # 2 possibilités soit on bouche les trous, soit on supprime dans les autres listes les times correspondant
         # a priori le plus simple est de boucher
 
-        #print("list_i_time", list_i_time)
-        #print("list_trou_temp=", list_trou_temp)
+        ##print("list_i_time", list_i_time)
+        ##print("list_trou_temp=", list_trou_temp)
         if nbr_trou_temp > 0:
             indices = [list_i_time.index(k) for k in list_trou_temp]
-            print("indices_temp=", indices)
+            #print("indices_temp=", indices)
             for i in range(len(indices)):
                 index = indices[i]
                 file_data_list[0].insert(index, [list_trou_temp[i], '0', '0', '0'])
-            print("file_data_list[0]=",file_data_list[0])
+            #print("file_data_list[0]=",file_data_list[0])
         if nbr_trou_pulse > 0:
             indices = [list_i_time.index(k) for k in list_trou_pulse]
-            print("indices_pulse=", indices)
+            #print("indices_pulse=", indices)
             for i in range(len(indices)):
                 index = indices[i]
                 file_data_list[1].insert(index, [list_trou_pulse[i], '0.0'])
-            print("file_data_list[1]=",file_data_list[1])
+            #print("file_data_list[1]=",file_data_list[1])
         if nbr_trou_pince > 0:
             indices = [list_i_time.index(k) for k in list_trou_pince]
-            print("indices_pince=", indices)
+            #print("indices_pince=", indices)
             for i in range(len(indices)):
                 index = indices[i]
                 file_data_list[2].insert(index, [list_trou_pince[i], '0.00', '0.00'])
-            print("file_data_list[2]=",file_data_list[2])
-        #print("file_data_list[3]=", file_data_list[3])
+            #print("file_data_list[2]=",file_data_list[2])
+        ##print("file_data_list[3]=", file_data_list[3])
         if nbr_trou_tinfos > 0:
             indices = [list_i_time.index(k) for k in list_trou_tinfos]
-            print("indices_tinfos=", indices)
+            #print("indices_tinfos=", indices)
             for i in range(len(indices)):
                 index = indices[i]
                 file_data_list[3].insert(index, [list_trou_tinfos[i], '0', '0','0', '0', '0'])
-            #print("file_data_list[3]=",file_data_list[3])
+            ##print("file_data_list[3]=",file_data_list[3])
 
 
         # Fusion des listes pour injection dans la base
@@ -216,7 +216,7 @@ class CsvTraitement:
             dateutc =  datelocal.toUTC().toString("yyyy-MM-dd hh:mm")
             sublist1.insert(2, dateutc)
 
-            #print("sublist1=",sublist1)
+            ##print("sublist1=",sublist1)
             # Id, Time, time_utc, w1, w2, w3, pulse_1, pince_1, pince_2, base, ph1, ph2, ph3, pa):
             if len(sublist1) == 14: # tous les éléments existent
                 recordBase = [int(sublist1[0]), sublist1[1],(sublist1[2]),
@@ -241,7 +241,7 @@ class CsvTraitement:
                 "Echec ecriture en base"
             )
 
-        print("Fin ajout base")
+        #print("Fin ajout base")
 
         # Vidage def ftp_temp
         listdir = os.listdir('./ftp_temp')
@@ -249,7 +249,7 @@ class CsvTraitement:
         for f in listdir:
             os.remove(f"./ftp_temp/{f}")
 
-        print("CsvTraitement.readCsvFiles OUT")
+        #print("CsvTraitement.readCsvFiles OUT")
 
     def convert_index_to_time_string(self,index):
         h, m = divmod(index, 60)
