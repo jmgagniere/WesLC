@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QDateEdit, QDialog,
-    QGridLayout, QGroupBox, QHeaderView, QLabel,
-    QPushButton, QSizePolicy, QSpacerItem, QTextEdit,
+    QFrame, QGridLayout, QGroupBox, QHeaderView,
+    QLabel, QPushButton, QSizePolicy, QTextEdit,
     QTreeView, QVBoxLayout, QWidget)
 
 class Ui_Dialog(object):
@@ -95,84 +95,93 @@ class Ui_Dialog(object):
         self.gb_splitBase.setSizePolicy(sizePolicy)
         self.gb_splitBase.setMinimumSize(QSize(350, 120))
         self.gb_splitBase.setFlat(False)
-        self.gridLayout_2 = QGridLayout(self.gb_splitBase)
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.label = QLabel(self.gb_splitBase)
         self.label.setObjectName(u"label")
+        self.label.setGeometry(QRect(17, 33, 81, 16))
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy)
-
-        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
-
         self.lab_firstRec = QLabel(self.gb_splitBase)
         self.lab_firstRec.setObjectName(u"lab_firstRec")
+        self.lab_firstRec.setGeometry(QRect(145, 33, 90, 21))
         sizePolicy.setHeightForWidth(self.lab_firstRec.sizePolicy().hasHeightForWidth())
         self.lab_firstRec.setSizePolicy(sizePolicy)
         self.lab_firstRec.setMinimumSize(QSize(90, 21))
         self.lab_firstRec.setMaximumSize(QSize(90, 21))
-
-        self.gridLayout_2.addWidget(self.lab_firstRec, 0, 1, 1, 1)
-
-        self.horizontalSpacer = QSpacerItem(164, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_2.addItem(self.horizontalSpacer, 0, 2, 1, 1)
-
         self.label_2 = QLabel(self.gb_splitBase)
         self.label_2.setObjectName(u"label_2")
+        self.label_2.setGeometry(QRect(427, 33, 78, 16))
         sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
         self.label_2.setSizePolicy(sizePolicy)
-
-        self.gridLayout_2.addWidget(self.label_2, 0, 3, 1, 1)
-
         self.lab_lastRec = QLabel(self.gb_splitBase)
         self.lab_lastRec.setObjectName(u"lab_lastRec")
+        self.lab_lastRec.setGeometry(QRect(521, 33, 90, 21))
         self.lab_lastRec.setMinimumSize(QSize(90, 21))
         self.lab_lastRec.setMaximumSize(QSize(90, 21))
-
-        self.gridLayout_2.addWidget(self.lab_lastRec, 0, 4, 1, 1)
-
         self.label_3 = QLabel(self.gb_splitBase)
         self.label_3.setObjectName(u"label_3")
-
-        self.gridLayout_2.addWidget(self.label_3, 1, 0, 1, 1)
-
+        self.label_3.setGeometry(QRect(17, 60, 95, 16))
         self.dt_firstRecord = QDateEdit(self.gb_splitBase)
         self.dt_firstRecord.setObjectName(u"dt_firstRecord")
+        self.dt_firstRecord.setGeometry(QRect(145, 60, 94, 20))
         sizePolicy.setHeightForWidth(self.dt_firstRecord.sizePolicy().hasHeightForWidth())
         self.dt_firstRecord.setSizePolicy(sizePolicy)
         self.dt_firstRecord.setMinimumSize(QSize(90, 0))
-
-        self.gridLayout_2.addWidget(self.dt_firstRecord, 1, 1, 1, 1)
-
         self.label_4 = QLabel(self.gb_splitBase)
         self.label_4.setObjectName(u"label_4")
-
-        self.gridLayout_2.addWidget(self.label_4, 1, 3, 1, 1)
-
+        self.label_4.setGeometry(QRect(427, 60, 82, 16))
         self.dt_lastRecord = QDateEdit(self.gb_splitBase)
         self.dt_lastRecord.setObjectName(u"dt_lastRecord")
+        self.dt_lastRecord.setGeometry(QRect(521, 60, 94, 20))
         sizePolicy.setHeightForWidth(self.dt_lastRecord.sizePolicy().hasHeightForWidth())
         self.dt_lastRecord.setSizePolicy(sizePolicy)
         self.dt_lastRecord.setMinimumSize(QSize(90, 0))
-
-        self.gridLayout_2.addWidget(self.dt_lastRecord, 1, 4, 1, 1)
-
         self.cb_autoriseSplit = QCheckBox(self.gb_splitBase)
         self.cb_autoriseSplit.setObjectName(u"cb_autoriseSplit")
+        self.cb_autoriseSplit.setGeometry(QRect(15, 97, 106, 20))
         self.cb_autoriseSplit.setMaximumSize(QSize(16777215, 30))
-
-        self.gridLayout_2.addWidget(self.cb_autoriseSplit, 2, 0, 1, 1)
-
         self.btn_splitBase = QPushButton(self.gb_splitBase)
         self.btn_splitBase.setObjectName(u"btn_splitBase")
         self.btn_splitBase.setEnabled(False)
+        self.btn_splitBase.setGeometry(QRect(427, 96, 183, 27))
         sizePolicy.setHeightForWidth(self.btn_splitBase.sizePolicy().hasHeightForWidth())
         self.btn_splitBase.setSizePolicy(sizePolicy)
         self.btn_splitBase.setMinimumSize(QSize(183, 0))
         self.btn_splitBase.setMaximumSize(QSize(16777215, 30))
-
-        self.gridLayout_2.addWidget(self.btn_splitBase, 2, 3, 1, 2)
-
+        self.lineH = QFrame(self.gb_splitBase)
+        self.lineH.setObjectName(u"lineH")
+        self.lineH.setGeometry(QRect(138, 86, 479, 3))
+        sizePolicy.setHeightForWidth(self.lineH.sizePolicy().hasHeightForWidth())
+        self.lineH.setSizePolicy(sizePolicy)
+        self.lineH.setMinimumSize(QSize(478, 0))
+        self.lineH.setBaseSize(QSize(0, 0))
+        self.lineH.setStyleSheet(u"background-color: rgb(0, 0, 255);")
+        self.lineH.setLineWidth(3)
+        self.lineH.setFrameShape(QFrame.Shape.HLine)
+        self.lineH.setFrameShadow(QFrame.Shadow.Sunken)
+        self.lineV1 = QFrame(self.gb_splitBase)
+        self.lineV1.setObjectName(u"lineV1")
+        self.lineV1.setGeometry(QRect(138, 57, 3, 30))
+        sizePolicy.setHeightForWidth(self.lineV1.sizePolicy().hasHeightForWidth())
+        self.lineV1.setSizePolicy(sizePolicy)
+        self.lineV1.setMinimumSize(QSize(0, 30))
+        self.lineV1.setStyleSheet(u"background-color: rgb(0, 0, 255);")
+        self.lineV1.setLineWidth(3)
+        self.lineV1.setFrameShape(QFrame.Shape.VLine)
+        self.lineV1.setFrameShadow(QFrame.Shadow.Sunken)
+        self.lineV2 = QFrame(self.gb_splitBase)
+        self.lineV2.setObjectName(u"lineV2")
+        self.lineV2.setGeometry(QRect(616, 58, 3, 30))
+        self.lineV2.setMinimumSize(QSize(0, 30))
+        self.lineV2.setStyleSheet(u"background-color: rgb(0, 0, 255);")
+        self.lineV2.setLineWidth(3)
+        self.lineV2.setFrameShape(QFrame.Shape.VLine)
+        self.lineV2.setFrameShadow(QFrame.Shadow.Sunken)
+        self.label_5 = QLabel(self.gb_splitBase)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setGeometry(QRect(294, 71, 95, 16))
+        font1 = QFont()
+        font1.setPointSize(11)
+        self.label_5.setFont(font1)
         self.gb_bases = QGroupBox(Dialog)
         self.gb_bases.setObjectName(u"gb_bases")
         self.gb_bases.setGeometry(QRect(16, 154, 649, 271))
@@ -228,6 +237,7 @@ class Ui_Dialog(object):
         self.label_4.setText(QCoreApplication.translate("Dialog", u"Supprime >:", None))
         self.cb_autoriseSplit.setText(QCoreApplication.translate("Dialog", u"Autorise Split", None))
         self.btn_splitBase.setText(QCoreApplication.translate("Dialog", u"Split Base", None))
+        self.label_5.setText(QCoreApplication.translate("Dialog", u"Portion incluse", None))
         self.gb_bases.setTitle(QCoreApplication.translate("Dialog", u"Bases:", None))
         self.btn_loadBase.setText(QCoreApplication.translate("Dialog", u"Charge autre base", None))
         self.btn_kill_base.setText(QCoreApplication.translate("Dialog", u"Supprime", None))
