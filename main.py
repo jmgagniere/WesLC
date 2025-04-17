@@ -22,7 +22,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("WES - LC")
         # 1ere connection et ouverture de la base contenant les configurations
-        db = Database()
+        Database()
 
         # lecture de la base courante en '.baseWes_ini.db'
         base = Database.get_current_base_name_in_base(self)
