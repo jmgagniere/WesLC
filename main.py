@@ -1,3 +1,5 @@
+#!/Users/jmg/WesLC/venv/bin/python3
+
 import sys, os
 from functools import partial
 
